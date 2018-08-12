@@ -11,10 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
-        <activity
-            android:name=".authorization.AuthorizationActivity"
-            android:noHistory="true"/>
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,10 +19,14 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".service.MailBoxService"
-            android:enabled="true"
-            android:exported="false"/>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"/>
+
+        <activity
+            android:name=".MessageContentActivity"
+            android:parentActivityName=".MainActivity"
+            />
     </application>
 
 </manifest>

@@ -1,8 +1,3 @@
 <resources>
     <string name="app_name">Email Agent</string>
-    <string name="title_sign_in">Sign In</string>
-    <string name="title_password">Password</string>
-    <string name="title_email">Email</string>
-    <string name="title_yandex_mail">Yandex Mail</string>
-    <string name="title_gmail">Gmail</string>
 </resources>
