@@ -1,4 +1,4 @@
-package com.mashjulal.android.emailagent
+package com.mashjulal.android.emailagent.ui
 
 import android.content.Context
 import android.content.Intent
@@ -13,6 +13,7 @@ import android.text.util.Linkify
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.mashjulal.android.emailagent.R
 import com.mashjulal.android.emailagent.data.repository.mail.DefaultMailRepository
 import com.mashjulal.android.emailagent.data.repository.mail.stub.AccountRepositoryStub
 import com.mashjulal.android.emailagent.data.repository.mail.stub.MailDomainRepositoryStub

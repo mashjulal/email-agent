@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".ui.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,12 +20,12 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:launchMode="singleTop"/>
 
         <activity
-            android:name=".MessageContentActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".ui.MessageContentActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             />
     </application>
 

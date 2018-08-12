@@ -1,4 +1,4 @@
-package com.mashjulal.android.emailagent
+package com.mashjulal.android.emailagent.ui.main
 
 import android.content.Context
 import android.content.Intent
@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
+import com.mashjulal.android.emailagent.R
 import com.mashjulal.android.emailagent.data.repository.mail.DefaultMailRepository
 import com.mashjulal.android.emailagent.data.repository.mail.stub.AccountRepositoryStub
 import com.mashjulal.android.emailagent.data.repository.mail.stub.MailDomainRepositoryStub
 import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.ui.MessageContentActivity
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

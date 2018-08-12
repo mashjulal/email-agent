@@ -1,8 +1,10 @@
-package com.mashjulal.android.emailagent
+package com.mashjulal.android.emailagent.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.mashjulal.android.emailagent.R
+import com.mashjulal.android.emailagent.ui.main.MainActivity
 
 /**
  * Class for activities that shows start image while data is loading.
