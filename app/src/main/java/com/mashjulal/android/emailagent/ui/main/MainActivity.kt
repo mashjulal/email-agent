@@ -3,76 +3,74 @@ package com.mashjulal.android.emailagent.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.mashjulal.android.emailagent.R
-import com.mashjulal.android.emailagent.data.repository.mail.DefaultMailRepository
-import com.mashjulal.android.emailagent.data.repository.mail.stub.AccountRepositoryStub
-import com.mashjulal.android.emailagent.data.repository.mail.stub.MailDomainRepositoryStub
 import com.mashjulal.android.emailagent.domain.model.Email
 import com.mashjulal.android.emailagent.domain.model.User
-import com.mashjulal.android.emailagent.ui.MessageContentActivity
+import com.mashjulal.android.emailagent.ui.messagecontent.MessageContentActivity
 import com.mashjulal.android.emailagent.ui.utils.EndlessRecyclerViewScrollListener
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity(), MainView {
 
-    private lateinit var mUser: User
+    @Inject
+    lateinit var presenter: MainPresenter
+
     private lateinit var onEndlessScrollListener: EndlessRecyclerViewScrollListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        presenter.attachView(this)
+
         intent.let {
             val id = it.getLongExtra(ARG_ID, -1L)
-            mUser = AccountRepositoryStub().getUserById(id)
+            presenter.requestUser(id)
         }
         initRecyclerView()
-        update(0)
+        presenter.requestUpdateMailList(0)
     }
 
     private fun initRecyclerView() {
         recyclerView.adapter = MailBoxRecyclerViewAdapter(mutableListOf()
-        ) { messageNumber ->
-            startActivity(MessageContentActivity.newIntent(this, mUser, messageNumber))
-        }
+        ) { messageNumber -> presenter.onEmailClick(messageNumber)}
         recyclerView.addItemDecoration(DividerItemDecoration(this, VERTICAL))
 
         val layoutManager: LinearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
         onEndlessScrollListener = object: EndlessRecyclerViewScrollListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                update(page)
+                presenter.requestUpdateMailList(page)
             }
         }
         recyclerView.addOnScrollListener(onEndlessScrollListener)
     }
 
-    private fun update(offset: Int) {
-        Single.fromCallable {
-            val mailDomains = MailDomainRepositoryStub()
-            val domains = mailDomains.getByName("yandex")
-            val mailRep = DefaultMailRepository(
-                    DefaultMailRepository.FOLDER_INBOX,
-                    domains.first { it.protocol == "imap" },
-                    domains.first { it.protocol == "smtp" }
-            )
-            mailRep.getMail(mUser, offset)
-        }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { data: List<Email> ->
-                            (recyclerView.adapter as MailBoxRecyclerViewAdapter).addData(data) },
-                        { _ ->
-                            recyclerView.removeOnScrollListener(onEndlessScrollListener) }
-                )
+    override fun onResume() {
+        super.onResume()
+        presenter.attachView(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.detachView()
+    }
+
+    override fun updateMailList(mail: List<Email>) {
+        (recyclerView.adapter as MailBoxRecyclerViewAdapter).addData(mail)
+    }
+
+    override fun stopUpdatingMailList() {
+        recyclerView.removeOnScrollListener(onEndlessScrollListener)
+    }
+
+    override fun showMessageContent(user: User, messageNumber: Int) {
+        startActivity(MessageContentActivity.newIntent(this, user, messageNumber))
     }
 
     companion object {
