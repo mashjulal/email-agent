@@ -27,7 +27,7 @@ data class Address(
         val email: String,
         val name: String
 ) {
-    constructor(address: InternetAddress): this(address.address, address.personal)
+    constructor(address: InternetAddress): this(address.address, address.personal ?: address.address)
 }
 
 private fun extractContent(message: Message): List<BodyPart> {

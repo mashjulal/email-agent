@@ -55,7 +55,7 @@ abstract class BaseMailRepository(
         folder.open(Folder.READ_ONLY)
         val messages = folder.messages
                 .reversedArray()
-                .copyOfRange(offset, min(offset + count, folder.messageCount))
+                .copyOfRange(offset*count, min(offset*count + count, folder.messageCount))
                 .map { Email(it) }
         folder.close()
         store.close()

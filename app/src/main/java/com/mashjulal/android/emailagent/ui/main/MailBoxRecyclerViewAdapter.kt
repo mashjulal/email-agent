@@ -33,12 +33,11 @@ class MailBoxRecyclerViewAdapter(
         return mMessages.size
     }
 
-    fun onNewData(messages: List<Email>) {
-        mMessages.clear()
+    fun addData(messages: List<Email>) {
+        val initialSize = mMessages.size
         mMessages.addAll(messages)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(initialSize, messages.size)
     }
-
 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

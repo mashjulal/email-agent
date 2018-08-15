@@ -6,12 +6,16 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import com.mashjulal.android.emailagent.R
 import com.mashjulal.android.emailagent.data.repository.mail.DefaultMailRepository
 import com.mashjulal.android.emailagent.data.repository.mail.stub.AccountRepositoryStub
 import com.mashjulal.android.emailagent.data.repository.mail.stub.MailDomainRepositoryStub
+import com.mashjulal.android.emailagent.domain.model.Email
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.ui.MessageContentActivity
+import com.mashjulal.android.emailagent.ui.utils.EndlessRecyclerViewScrollListener
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -20,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mUser: User
+    private lateinit var onEndlessScrollListener: EndlessRecyclerViewScrollListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(MessageContentActivity.newIntent(this, mUser, messageNumber))
         }
         recyclerView.addItemDecoration(DividerItemDecoration(this, VERTICAL))
+
+        val layoutManager: LinearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+        onEndlessScrollListener = object: EndlessRecyclerViewScrollListener(layoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                update(page)
+            }
+        }
+        recyclerView.addOnScrollListener(onEndlessScrollListener)
     }
 
     private fun update(offset: Int) {
@@ -54,9 +67,12 @@ class MainActivity : AppCompatActivity() {
         }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { data ->
-                    (recyclerView.adapter as MailBoxRecyclerViewAdapter).onNewData(data)
-                }
+                .subscribe(
+                        { data: List<Email> ->
+                            (recyclerView.adapter as MailBoxRecyclerViewAdapter).addData(data) },
+                        { _ ->
+                            recyclerView.removeOnScrollListener(onEndlessScrollListener) }
+                )
     }
 
     companion object {
