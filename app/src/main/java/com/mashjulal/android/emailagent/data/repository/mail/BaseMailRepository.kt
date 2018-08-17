@@ -4,10 +4,12 @@ import com.mashjulal.android.emailagent.domain.model.Email
 import com.mashjulal.android.emailagent.domain.model.MailDomain
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.domain.repository.MailRepository
+import org.apache.commons.mail.util.MimeMessageParser
 import javax.mail.Folder
 import javax.mail.Message
 import javax.mail.Session
 import javax.mail.Store
+import javax.mail.internet.MimeMessage
 import javax.mail.search.SearchTerm
 import kotlin.math.min
 
@@ -56,7 +58,10 @@ abstract class BaseMailRepository(
         val messages = folder.messages
                 .reversedArray()
                 .copyOfRange(offset*count, min(offset*count + count, folder.messageCount))
-                .map { Email(it) }
+                .map { msg: Message ->
+                    val msgParsed = MimeMessageParser(msg as MimeMessage).parse()
+                    Email(msg, msgParsed)
+                }
         folder.close()
         store.close()
         return messages
@@ -70,7 +75,9 @@ abstract class BaseMailRepository(
             override fun match(msg: Message?): Boolean
                     = msg!!.messageNumber == number
         }
-        val message = Email(folder.search(term)[0])
+        val msg = folder.search(term)[0]
+        val msgParsed = MimeMessageParser(msg as MimeMessage).parse()
+        val message = Email(msg, msgParsed)
         folder.close()
         store.close()
         return message

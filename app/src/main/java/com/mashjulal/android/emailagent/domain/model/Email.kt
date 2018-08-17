@@ -1,8 +1,9 @@
 package com.mashjulal.android.emailagent.domain.model
 
+import org.apache.commons.mail.util.MimeMessageParser
+import java.io.InputStream
 import javax.mail.Flags
 import javax.mail.Message
-import javax.mail.Multipart
 import javax.mail.internet.InternetAddress
 
 data class Email(
@@ -10,17 +11,23 @@ data class Email(
         val subject: String,
         val from: Address,
         val isRead: Boolean,
-        val content: List<BodyPart>
+        val content: EmailContent
 ) {
-    constructor(message: Message): this(message.messageNumber, message.subject,
-            Address(message.from[0] as InternetAddress), message.isSet(Flags.Flag.SEEN),
-            extractContent(message)
-    )
+    constructor(msg: Message, msgParsed: MimeMessageParser):
+            this(msg.messageNumber, msgParsed.subject, Address(msg.from[0] as InternetAddress), msg.isSet(Flags.Flag.SEEN),
+                    EmailContent(msgParsed.htmlContent, msgParsed.attachmentList.map {
+                        Attachment(it.name, it.contentType, it.inputStream) }))
 }
 
-data class BodyPart(
-        val mimeType: String,
-        val content: String
+data class EmailContent(
+        val htmlContent: String,
+        val attachments: List<Attachment>
+)
+
+data class Attachment(
+        val filename: String,
+        val contentType: String,
+        val inputStream: InputStream
 )
 
 data class Address(
@@ -28,24 +35,4 @@ data class Address(
         val name: String
 ) {
     constructor(address: InternetAddress): this(address.address, address.personal ?: address.address)
-}
-
-private fun extractContent(message: Message): List<BodyPart> {
-    val messageContent = message.content
-    val parts = mutableListOf<BodyPart>()
-    when (messageContent) {
-        is Multipart -> {
-            for (i in 0..(messageContent.count-1)) {
-                val bodyPart = messageContent.getBodyPart(i)
-                BodyPart(bodyPart.contentType, bodyPart.content.toString())
-                if (bodyPart.isMimeType("text/html")) {
-                    parts.add(BodyPart(bodyPart.contentType, bodyPart.content.toString()))
-                }
-            }
-        }
-        is String -> {
-            parts.add(BodyPart("text/html", messageContent))
-        }
-    }
-    return parts
 }

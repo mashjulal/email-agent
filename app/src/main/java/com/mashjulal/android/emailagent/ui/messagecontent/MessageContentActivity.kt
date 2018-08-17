@@ -6,16 +6,15 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
-import android.text.util.Linkify
-import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.mashjulal.android.emailagent.R
+import com.mashjulal.android.emailagent.domain.model.Attachment
+import com.mashjulal.android.emailagent.domain.model.EmailContent
 import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.ui.utils.saveToAppFiles
+import com.mashjulal.android.emailagent.ui.utils.showFile
 import dagger.android.support.DaggerAppCompatActivity
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_message_content.*
@@ -28,6 +27,9 @@ class MessageContentActivity : DaggerAppCompatActivity(), MessageContentView {
 
     @Inject
     lateinit var presenter: MessageContentPresenter
+
+    private lateinit var attachmentAdapter: AttachmentListAdapter
+    private lateinit var attachments: List<Attachment>
 
     private val imageHandler = object: ImageHandler() {
         override fun handleTagNode(node: TagNode, builder: SpannableStringBuilder, start: Int, end: Int) {
@@ -46,11 +48,21 @@ class MessageContentActivity : DaggerAppCompatActivity(), MessageContentView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_content)
 
+        initAttachmentList()
         intent.let {
             val messageNumber = intent.getIntExtra(ARG_MESSAGE_NUMBER, -1)
             val id = it.getLongExtra(ARG_ID, -1L)
             presenter.requestMessageContent(id, messageNumber)
         }
+    }
+
+    private fun initAttachmentList() {
+        attachmentAdapter = AttachmentListAdapter(mutableListOf()) {position ->
+            val attachment = attachments[position]
+            val attachmentFile = saveToAppFiles(this, attachment.filename, attachment.inputStream)
+            showFile(this, attachmentFile, attachment.contentType)
+        }
+        rv_attachments.adapter = attachmentAdapter
     }
 
 
@@ -68,30 +80,18 @@ class MessageContentActivity : DaggerAppCompatActivity(), MessageContentView {
         supportActionBar.let { title = subject }
     }
 
-    override fun showMessageContent(content: List<String>) {
-        Observable.create<View> {
+    override fun showMessageContent(content: EmailContent) {
+        Single.fromCallable {
             val htmlSpanner = HtmlSpanner()
             htmlSpanner.registerHandler("img", imageHandler)
-
-            val params = LinearLayout.LayoutParams(container.layoutParams).apply {
-                setMargins(64, 64, 64, 64)
-            }
-            for (html in content) {
-                val v = TextView(this).apply {
-                    autoLinkMask = Linkify.ALL
-                    linksClickable = true
-                    movementMethod = LinkMovementMethod()
-                    text = htmlSpanner.fromHtml(html)
-                }
-                v.layoutParams = params
-                it.onNext(v)
-            }
-            it.onComplete()
+            htmlSpanner.fromHtml(content.htmlContent)
         }.subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    container.addView(it)
+                .subscribe { html ->
+                    tv_htmlContent.text = html
                 }
+        attachments = content.attachments
+        attachmentAdapter.onNewData(attachments)
     }
 
     companion object {
