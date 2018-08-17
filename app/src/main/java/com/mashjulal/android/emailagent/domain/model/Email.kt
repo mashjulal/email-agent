@@ -7,16 +7,23 @@ import javax.mail.Message
 import javax.mail.internet.InternetAddress
 
 data class Email(
-        val messageNumber: Int,
-        val subject: String,
-        val from: Address,
-        val isRead: Boolean,
+        val emailHeader: EmailHeader,
         val content: EmailContent
 ) {
     constructor(msg: Message, msgParsed: MimeMessageParser):
-            this(msg.messageNumber, msgParsed.subject, Address(msg.from[0] as InternetAddress), msg.isSet(Flags.Flag.SEEN),
-                    EmailContent(msgParsed.htmlContent, msgParsed.attachmentList.map {
-                        Attachment(it.name, it.contentType, it.inputStream) }))
+            this(EmailHeader(msg), EmailContent(
+                    msgParsed.htmlContent,
+                    msgParsed.attachmentList.map { Attachment(it.name, it.contentType, it.inputStream) }))
+}
+
+data class EmailHeader(
+        val messageNumber: Int,
+        val subject: String,
+        val from: Address,
+        val isRead: Boolean
+) {
+    constructor(msg: Message): this(msg.messageNumber, msg.subject,
+            Address(msg.from[0] as InternetAddress), msg.isSet(Flags.Flag.SEEN))
 }
 
 data class EmailContent(

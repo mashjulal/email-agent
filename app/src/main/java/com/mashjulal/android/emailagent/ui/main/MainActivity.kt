@@ -8,7 +8,7 @@ import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.mashjulal.android.emailagent.R
-import com.mashjulal.android.emailagent.domain.model.Email
+import com.mashjulal.android.emailagent.domain.model.EmailHeader
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.ui.messagecontent.MessageContentActivity
 import com.mashjulal.android.emailagent.ui.utils.EndlessRecyclerViewScrollListener
@@ -61,7 +61,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         presenter.detachView()
     }
 
-    override fun updateMailList(mail: List<Email>) {
+    override fun updateMailList(mail: List<EmailHeader>) {
         (recyclerView.adapter as MailBoxRecyclerViewAdapter).addData(mail)
     }
 

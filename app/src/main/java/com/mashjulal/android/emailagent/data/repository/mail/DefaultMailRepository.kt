@@ -15,6 +15,9 @@ class DefaultMailRepository(
     fun getMail(user: User, offset: Int): List<Email> =
             super.getMail(user, folder, offset, PAGE_SIZE)
 
+    fun getMailHeaders(user: User, offset: Int) =
+            super.getMailHeaders(user, folder, offset, PAGE_SIZE)
+
     fun getMailByNumber(user: User, mailNumber: Int): Email =
             super.getMailByNumber(user, folder, mailNumber)
 

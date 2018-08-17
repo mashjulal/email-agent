@@ -1,6 +1,7 @@
 package com.mashjulal.android.emailagent.data.repository.mail
 
 import com.mashjulal.android.emailagent.domain.model.Email
+import com.mashjulal.android.emailagent.domain.model.EmailHeader
 import com.mashjulal.android.emailagent.domain.model.MailDomain
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.domain.repository.MailRepository
@@ -62,6 +63,19 @@ abstract class BaseMailRepository(
                     val msgParsed = MimeMessageParser(msg as MimeMessage).parse()
                     Email(msg, msgParsed)
                 }
+        folder.close()
+        store.close()
+        return messages
+    }
+
+    override fun getMailHeaders(user: User, folderName: String, offset: Int, count: Int): List<EmailHeader> {
+        val store = connectToStore(user, SESSION_IMAP)
+        val folder = store.getFolder(folderName)
+        folder.open(Folder.READ_ONLY)
+        val messages = folder.messages
+                .reversedArray()
+                .copyOfRange(offset*count, min(offset*count + count, folder.messageCount))
+                .map { EmailHeader(it) }
         folder.close()
         store.close()
         return messages

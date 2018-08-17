@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mashjulal.android.emailagent.R
-import com.mashjulal.android.emailagent.domain.model.Email
+import com.mashjulal.android.emailagent.domain.model.EmailHeader
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class MailBoxRecyclerViewAdapter(
-        private val mMessages: MutableList<Email>,
+        private val mMessages: MutableList<EmailHeader>,
         private val mItemSelectedListener: (Int) -> Unit
 ) : RecyclerView.Adapter<MailBoxRecyclerViewAdapter.ViewHolder>() {
 
@@ -33,7 +33,7 @@ class MailBoxRecyclerViewAdapter(
         return mMessages.size
     }
 
-    fun addData(messages: List<Email>) {
+    fun addData(messages: List<EmailHeader>) {
         val initialSize = mMessages.size
         mMessages.addAll(messages)
         notifyItemRangeInserted(initialSize, messages.size)

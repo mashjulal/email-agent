@@ -37,7 +37,7 @@ class MessageContentPresenter @Inject constructor(
                         domains.first { it.protocol == "smtp" }
                 )
                 val message = mailRep.getMailByNumber(user, number)
-                val subject = message.subject
+                val subject = message.emailHeader.subject
                 val content = message.content
 
                 subject to content
