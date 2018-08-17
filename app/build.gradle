@@ -1,21 +1,18 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
 
 android {
     signingConfigs {
     }
-    compileSdkVersion 27
+    compileSdkVersion SDK_VERSION
     defaultConfig {
         applicationId "com.mashjulal.android.emailagent"
-        minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion SDK_VERSION
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,64 +26,43 @@ android {
     }
 }
 
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
-}
-
-def dev_versions = [
-    support_library: '27.1.1',
-    constraint_layout: '1.1.2',
-    rxjava: '2.1.7',
-    rxandroid: '2.0.1',
-    html_spanner: '0.4',
-    android_mail: '1.6.1',
-    commons_mail: '1.5',
-    dagger: '2.16'
-]
-
-def test_versions = [
-    junit: '4.12',
-    espresso: '3.0.2',
-    android_runner: '1.0.2'
-]
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // Support library
-    implementation "com.android.support:appcompat-v7:${dev_versions.support_library}"
-    implementation "com.android.support:recyclerview-v7:${dev_versions.support_library}"
-    implementation "com.android.support:support-v4:${dev_versions.support_library}"
-    implementation "com.android.support.constraint:constraint-layout:${dev_versions.constraint_layout}"
+    // Kotlin
+    implementation kotlinsdk.stdlib
 
-    // https://mvnrepository.com/artifact/com.sun.mail/android-mail
-    implementation("com.sun.mail:android-mail:${dev_versions.android_mail}") {
-        exclude group: "javax.activation", module: "activation"
+    // Support
+    implementation support.appcompat7
+    implementation support.recyclerview
+    implementation support.support4
+    implementation support.cardview
+    implementation support.constraintLayout
+
+    // Java mail
+    implementation(javamail.android) {
+        exclude group: "javax.activation"
     }
-
-    implementation("org.apache.commons:commons-email:${dev_versions.commons_mail}") {
+    implementation(javamail.commons) {
         exclude group: "com.sun.mail", module: "javax.mail"
     }
 
-    implementation "com.github.NightWhistler:HtmlSpanner:${dev_versions.html_spanner}"
+    // HtmlSpanner
+    implementation html.spanner
 
     // RxJava
-    implementation "io.reactivex.rxjava2:rxandroid:${dev_versions.rxandroid}"
-    implementation "io.reactivex.rxjava2:rxjava:${dev_versions.rxjava}"
-
-    // JUnit and Espresso
-    testImplementation "junit:junit:${test_versions.junit}"
-    androidTestImplementation "com.android.support.test:runner:${test_versions.android_runner}"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:${test_versions.espresso}"
+    implementation rx.java
+    implementation rx.android
 
     // Dagger
-    implementation "com.google.dagger:dagger:$dev_versions.dagger"
-    kapt "com.google.dagger:dagger-compiler:$dev_versions.dagger"
-    implementation "com.google.dagger:dagger-android:$dev_versions.dagger"
-    kapt "com.google.dagger:dagger-android-processor:$dev_versions.dagger"
-    implementation "com.google.dagger:dagger-android-support:$dev_versions.dagger"
-    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation dagger.dagger
+    kapt dagger.compiler
+    implementation dagger.android
+    kapt dagger.androidProcessor
+    implementation dagger.support
+
+    // Testing
+    testImplementation testing.junit
+    androidTestImplementation testing.androidRunner
+    androidTestImplementation testing.espresso
 }
