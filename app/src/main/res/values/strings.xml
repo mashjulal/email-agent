@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Email Agent</string>
+    <string name="message_sender_icon">Message sender icon</string>
 </resources>

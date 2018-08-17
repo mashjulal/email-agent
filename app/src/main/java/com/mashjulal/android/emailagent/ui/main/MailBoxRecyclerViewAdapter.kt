@@ -4,9 +4,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.mashjulal.android.emailagent.R
 import com.mashjulal.android.emailagent.domain.model.EmailHeader
+import com.mashjulal.android.emailagent.ui.utils.createTextIcon
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class MailBoxRecyclerViewAdapter(
@@ -22,6 +24,7 @@ class MailBoxRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val message = mMessages[position]
 
+        holder.senderIcon.setImageDrawable(createTextIcon(message.from.name, message.from.email))
         holder.tvSender.text = message.from.name
         holder.tvSubject.text = message.subject
         holder.itemView.setOnClickListener {
@@ -42,6 +45,7 @@ class MailBoxRecyclerViewAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        val senderIcon: ImageView = itemView.iv_senderIcon
         var tvSender: TextView = itemView.tv_sender
         var tvSubject: TextView = itemView.tv_subject
     }

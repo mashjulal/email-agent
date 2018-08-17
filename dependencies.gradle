@@ -16,6 +16,7 @@ ext {
             android_mail: '1.6.1',
             commons_mail: '1.5',
             dagger: '2.16',
+            textDrawable: '1.0.1',
 
             junit: '4.12',
             espresso: '3.0.2',
@@ -54,6 +55,10 @@ ext {
             android: "com.google.dagger:dagger-android:$versions.dagger",
             androidProcessor: "com.google.dagger:dagger-android-processor:$versions.dagger",
             support: "com.google.dagger:dagger-android-support:$versions.dagger"
+    ]
+
+    textDrawable = [
+            textDrawable: "com.amulyakhare:com.amulyakhare.textdrawable:$versions.textDrawable"
     ]
 
     testing = [
