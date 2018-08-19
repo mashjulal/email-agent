@@ -104,8 +104,12 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
         lv_folders.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked,
                 defaultFolders + domainUniqueFolders)
         lv_folders.setOnItemClickListener { _, _, position, _ ->
-            val selectedFolder = lv_folders.getItemAtPosition(position) as String
             mailListAdapter.clear()
+            onEndlessScrollListener.resetState()
+            recyclerView.removeOnScrollListener(onEndlessScrollListener)
+            recyclerView.addOnScrollListener(onEndlessScrollListener)
+
+            val selectedFolder = lv_folders.getItemAtPosition(position) as String
             presenter.requestUpdateMailList(selectedFolder, 0)
             drawer_layout.closeDrawer(GravityCompat.START)
         }
