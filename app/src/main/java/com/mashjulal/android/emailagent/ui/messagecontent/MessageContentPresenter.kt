@@ -3,6 +3,7 @@ package com.mashjulal.android.emailagent.ui.messagecontent
 import com.mashjulal.android.emailagent.data.repository.mail.DefaultMailRepository
 import com.mashjulal.android.emailagent.data.repository.mail.stub.MailDomainRepositoryStub
 import com.mashjulal.android.emailagent.domain.model.EmailContent
+import com.mashjulal.android.emailagent.domain.model.Folder
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import com.mashjulal.android.emailagent.ui.base.MvpView
@@ -32,7 +33,7 @@ class MessageContentPresenter @Inject constructor(
                 val mailDomains = MailDomainRepositoryStub()
                 val domains = mailDomains.getByName("yandex")
                 val mailRep = DefaultMailRepository(
-                        DefaultMailRepository.FOLDER_INBOX,
+                        Folder.INBOX.name,
                         domains.first {it.protocol == "imap" },
                         domains.first { it.protocol == "smtp" }
                 )

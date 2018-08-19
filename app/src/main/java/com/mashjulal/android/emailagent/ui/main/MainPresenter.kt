@@ -1,6 +1,7 @@
 package com.mashjulal.android.emailagent.ui.main
 
 import com.mashjulal.android.emailagent.data.repository.mail.DefaultMailRepository
+import com.mashjulal.android.emailagent.data.repository.mail.FolderRepositoryImpl
 import com.mashjulal.android.emailagent.domain.model.EmailHeader
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
@@ -18,20 +19,36 @@ class MainPresenter @Inject constructor(
 ): BasePresenter<MainView>() {
 
     private lateinit var currentUser: User
+    private lateinit var currentFolder: String
+    private lateinit var folders: List<String>
 
-    fun requestUser(userId: Long) {
+    fun requestUserAndFolderList(userId: Long) {
         Single.fromCallable {
             currentUser = accountRepository.getUserById(userId)
+
+            val domains = mailDomainRepository.getByName("yandex")
+            val folderRep = FolderRepositoryImpl(
+                    domains.first { it.protocol == "imap" }
+            )
+            folders = folderRep.getAll(currentUser)
+            folders
         }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+                .subscribe { fldrs ->
+                    view?.updateFolderList(fldrs)
+                }
+    }
+
+    fun requestUpdateMailList(folder: String, offset: Int) {
+        currentFolder = folder
+        requestUpdateMailList(offset)
     }
 
     fun requestUpdateMailList(offset: Int) {
         Single.fromCallable {
             val domains = mailDomainRepository.getByName("yandex")
             val mailRep = DefaultMailRepository(
-                    DefaultMailRepository.FOLDER_INBOX,
+                    currentFolder,
                     domains.first { it.protocol == "imap" },
                     domains.first { it.protocol == "smtp" }
             )
@@ -55,4 +72,5 @@ interface MainView: MvpView {
     fun updateMailList(mail: List<EmailHeader>)
     fun stopUpdatingMailList()
     fun showMessageContent(user: User, messageNumber: Int)
+    fun updateFolderList(folders: List<String>)
 }

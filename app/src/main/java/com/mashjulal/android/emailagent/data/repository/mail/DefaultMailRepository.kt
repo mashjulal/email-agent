@@ -20,12 +20,4 @@ class DefaultMailRepository(
 
     fun getMailByNumber(user: User, mailNumber: Int): Email =
             super.getMailByNumber(user, folder, mailNumber)
-
-    companion object {
-        const val FOLDER_INBOX = "INBOX"
-        const val FOLDER_DRAFTS = "DRAFTS"
-        const val FOLDER_SENT = "SENT"
-        const val FOLDER_SPAM = "SPAM"
-        const val FOLDER_TRASH = "TRASH"
-    }
 }

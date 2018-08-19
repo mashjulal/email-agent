@@ -3,7 +3,7 @@
     package="com.mashjulal.android.emailagent">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -20,15 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.main.MainActivity"
-            android:launchMode="singleTop"/>
-
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.messagecontent.MessageContentActivity"
-            android:parentActivityName=".ui.main.MainActivity"
-            />
+            android:parentActivityName=".ui.main.MainActivity" />
     </application>
 
 </manifest>

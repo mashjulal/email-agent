@@ -56,6 +56,8 @@ dependencies {
 
     // Dagger
     implementation dagger.dagger
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     kapt dagger.compiler
     implementation dagger.android
     kapt dagger.androidProcessor

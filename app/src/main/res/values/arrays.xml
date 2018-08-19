@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="folders_default">
+        <item>Inbox</item>
+        <item>Sent</item>
+        <item>Spam</item>
+        <item>Trash</item>
+        <item>Drafts</item>
+    </string-array>
+</resources>

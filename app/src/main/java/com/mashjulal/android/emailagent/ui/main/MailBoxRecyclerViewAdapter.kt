@@ -42,6 +42,11 @@ class MailBoxRecyclerViewAdapter(
         notifyItemRangeInserted(initialSize, messages.size)
     }
 
+    fun clear() {
+        mMessages.clear()
+        notifyDataSetChanged()
+    }
+
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
