@@ -2,6 +2,7 @@ package com.mashjulal.android.emailagent.data.repository.mail
 
 import com.mashjulal.android.emailagent.domain.model.MailDomain
 import com.mashjulal.android.emailagent.domain.model.User
+import io.reactivex.Completable
 import java.util.*
 import javax.mail.Session
 import javax.mail.Store
@@ -40,4 +41,10 @@ object StoreUtils {
         store.connect(host, user.address, user.password)
         return store
     }
+
+    fun auth(mailDomain: MailDomain, user: User): Completable =
+            Completable.fromAction {
+                val session = createSession(mailDomain)
+                connectToStore(user, session, SESSION_IMAP)
+            }
 }

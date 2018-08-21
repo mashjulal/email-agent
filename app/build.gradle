@@ -38,6 +38,7 @@ dependencies {
     implementation support.support4
     implementation support.cardview
     implementation support.constraintLayout
+    implementation support.design
 
     // Java mail
     implementation(javamail.android) {
@@ -46,6 +47,7 @@ dependencies {
     implementation(javamail.commons) {
         exclude group: "com.sun.mail", module: "javax.mail"
     }
+    implementation javamail.commonsValidator
 
     // HtmlSpanner
     implementation html.spanner
@@ -56,8 +58,6 @@ dependencies {
 
     // Dagger
     implementation dagger.dagger
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     kapt dagger.compiler
     implementation dagger.android
     kapt dagger.androidProcessor

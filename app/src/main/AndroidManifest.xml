@@ -23,10 +23,14 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.messagecontent.MessageContentActivity"
             android:parentActivityName=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.auth.AuthActivity"
+            android:noHistory="true"
+            />
     </application>
 
 </manifest>
