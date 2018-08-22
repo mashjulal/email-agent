@@ -9,6 +9,7 @@ import com.mashjulal.android.emailagent.ui.base.MvpView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import net.sqlcipher.database.SQLiteConstraintException
 import javax.inject.Inject
 import javax.mail.AuthenticationFailedException
 
@@ -22,31 +23,20 @@ class AuthPresenter @Inject constructor(
     }
 
     fun tryToAuth(email: String, pwd: String) {
+        val user = User(0, "", email, pwd)
         Single.fromCallable {
-            val user = User(0, "", email, pwd)
             val domain = user.address.substringAfter("@").substringBefore(".")
             val mailDomain = mailDomainRepository.getByName(domain).first { it.protocol == "imap" }
-            mailDomain to user
+            mailDomain
         }
                 .subscribeOn(Schedulers.io())
+                .flatMapCompletable { mailDomain -> StoreUtils.auth(mailDomain, user) }
+                .andThen(Single.fromCallable { accountRepository.addUser(user) })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { (mailDomain, user) ->
-                            StoreUtils.auth(mailDomain, user)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(
-                                            { authSuccessful(user) },
-                                            { authFailed(it) }
-                                    )
-                        },
-                        { authFailed(it) }
+                        { userId: Long -> view?.completeAuthorization(userId) },
+                        { e: Throwable -> authFailed(e) }
                 )
-    }
-
-    private fun authSuccessful(user: User) {
-        val userId = accountRepository.addUser(user)
-        view?.completeAuthorization(userId)
     }
 
     private fun authFailed(e: Throwable) {
@@ -56,6 +46,9 @@ class AuthPresenter @Inject constructor(
             }
             is NoSuchElementException -> {
                 view?.showError("Unsupported mail domain")
+            }
+            is SQLiteConstraintException -> {
+                view?.showError("User with this email is already exist")
             }
             else -> {
                 view?.showError("Unexpected error: ${e.message}")

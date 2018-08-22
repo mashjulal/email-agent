@@ -1,6 +1,7 @@
 package com.mashjulal.android.emailagent.di.module
 
-import com.mashjulal.android.emailagent.data.repository.mail.stub.AccountRepositoryStub
+import com.mashjulal.android.emailagent.data.repository.mail.AccountRepositoryImpl
+import com.mashjulal.android.emailagent.data.repository.mail.room.AccountDao
 import com.mashjulal.android.emailagent.data.repository.mail.stub.MailDomainRepositoryStub
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
@@ -13,7 +14,8 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesAccountRepository(): AccountRepository = AccountRepositoryStub()
+    fun providesAccountRepository(accountDao: AccountDao): AccountRepository
+            = AccountRepositoryImpl(accountDao)
 
     @Singleton
     @Provides

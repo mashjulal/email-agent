@@ -66,6 +66,11 @@ dependencies {
     // Text Drawable
     implementation textDrawable.textDrawable
 
+    // Room
+    implementation room.runtime
+    kapt room.compiler
+    implementation room.saferoom
+
     // Testing
     testImplementation testing.junit
     androidTestImplementation testing.androidRunner

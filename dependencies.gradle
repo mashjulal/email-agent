@@ -18,6 +18,8 @@ ext {
             commons_validator: '1.6',
             dagger: '2.16',
             textDrawable: '1.0.1',
+            room: '1.1.1',
+            saferoom: '0.4.4',
 
             junit: '4.12',
             espresso: '3.0.2',
@@ -62,6 +64,12 @@ ext {
 
     textDrawable = [
             textDrawable: "com.amulyakhare:com.amulyakhare.textdrawable:$versions.textDrawable"
+    ]
+
+    room = [
+            runtime: "android.arch.persistence.room:runtime:$versions.room",
+            compiler: "android.arch.persistence.room:compiler:$versions.room",
+            saferoom: "com.commonsware.cwac:saferoom:$versions.saferoom"
     ]
 
     testing = [

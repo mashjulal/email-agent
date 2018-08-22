@@ -7,7 +7,8 @@ import dagger.android.support.AndroidSupportInjectionModule
         includes = [
             AndroidSupportInjectionModule::class,
             ViewModule::class,
-            RepositoryModule::class
+            RepositoryModule::class,
+            RoomModule::class
         ]
 )
 class AppModule
