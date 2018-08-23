@@ -18,6 +18,10 @@ class AccountRepositoryImpl @Inject constructor(
         return entityToModel(accountDao.getById(id))
     }
 
+    override fun getAll(): List<User> {
+        return accountDao.getAll().map { entityToModel(it) }
+    }
+
     private fun entityToModel(entity: AccountEntity): User =
             User(entity.id, entity.name, entity.email, entity.pwd)
 

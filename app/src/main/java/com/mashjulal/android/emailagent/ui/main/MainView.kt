@@ -9,4 +9,5 @@ interface MainView : BaseView {
     fun stopUpdatingMailList()
     fun showMessageContent(user: User, messageNumber: Int)
     fun updateFolderList(folders: List<String>)
+    fun updateUserList(users: List<User>)
 }

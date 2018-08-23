@@ -97,7 +97,22 @@ class MainActivity : BaseActivity(), MainView {
             recyclerView.removeOnScrollListener(onEndlessScrollListener)
             recyclerView.addOnScrollListener(onEndlessScrollListener)
 
-            val selectedFolder = lv_folders.getItemAtPosition(position) as String
+            val selectedFolder = lv_users.getItemAtPosition(position) as String
+            presenter.requestUpdateMailList(selectedFolder, 0)
+            drawer_layout.closeDrawer(GravityCompat.START)
+        }
+    }
+
+    override fun updateUserList(users: List<User>) {
+        lv_users.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked,
+                users.map { it.address })
+        lv_users.setOnItemClickListener { _, _, position, _ ->
+            mailListAdapter.clear()
+            onEndlessScrollListener.resetState()
+            recyclerView.removeOnScrollListener(onEndlessScrollListener)
+            recyclerView.addOnScrollListener(onEndlessScrollListener)
+
+            val selectedFolder = Folder.INBOX.name
             presenter.requestUpdateMailList(selectedFolder, 0)
             drawer_layout.closeDrawer(GravityCompat.START)
         }

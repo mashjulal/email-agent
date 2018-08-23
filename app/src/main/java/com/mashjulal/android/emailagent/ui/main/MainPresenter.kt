@@ -11,6 +11,7 @@ import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
+import com.mashjulal.android.emailagent.utils.addToComposite
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -28,12 +29,12 @@ class MainPresenter @Inject constructor(
     private lateinit var folders: List<String>
 
     override fun onFirstViewAttach() {
-        super.onFirstViewAttach()
         requestUserAndFolderList()
+        requestUserList()
         requestUpdateMailList(Folder.INBOX.name, 0)
     }
 
-    fun requestUserAndFolderList() {
+    private fun requestUserAndFolderList() {
         Single.fromCallable {
             val userId = preferenceManager.getLastSelectedUserId()
             currentUser = accountRepository.getUserById(userId)
@@ -47,7 +48,17 @@ class MainPresenter @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { fldrs ->
                     viewState.updateFolderList(fldrs)
-                }
+                }.addToComposite(compositeDisposable)
+    }
+
+    private fun requestUserList() {
+        Single.fromCallable {
+            accountRepository.getAll()
+        }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { users ->
+                    viewState.updateUserList(users)
+                }.addToComposite(compositeDisposable)
     }
 
     fun requestUpdateMailList(folder: String, offset: Int) {
@@ -70,7 +81,7 @@ class MainPresenter @Inject constructor(
                 .subscribe(
                         { data: List<EmailHeader> -> viewState.updateMailList(data)},
                         { _ -> viewState.stopUpdatingMailList()}
-                )
+                ).addToComposite(compositeDisposable)
     }
 
     fun onEmailClick(messageNumber: Int) {
