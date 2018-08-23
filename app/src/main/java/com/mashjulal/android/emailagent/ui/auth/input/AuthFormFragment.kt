@@ -1,17 +1,26 @@
 package com.mashjulal.android.emailagent.ui.auth.input
 
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mashjulal.android.emailagent.R
+import com.mashjulal.android.emailagent.ui.base.BaseFragment
+import com.mashjulal.android.emailagent.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_auth.*
 import org.apache.commons.validator.routines.EmailValidator
+import javax.inject.Inject
 
-class AuthFormFragment : Fragment() {
-    private var listener: OnFragmentInteractionListener? = null
+class AuthFormFragment : BaseFragment(), AuthFormView {
+
+    @Inject
+    @InjectPresenter
+    lateinit var presenter: AuthFormPresenter
+
+    @ProvidePresenter
+    fun providePresenter() = presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -41,30 +50,15 @@ class AuthFormFragment : Fragment() {
             et_email.error = "Invalid email"
             return
         }
-
-        listener?.onFragmentInteraction(email, pwd)
+        presenter.tryToAuth(email, pwd)
     }
 
-    fun showError(error: String) {
+    override fun completeAuthorization() {
+        startActivity(MainActivity.newIntent(requireContext()))
+    }
+
+    override fun showError(error: String) {
         tv_error.text = error
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(email: String, password: String)
     }
 
     companion object {

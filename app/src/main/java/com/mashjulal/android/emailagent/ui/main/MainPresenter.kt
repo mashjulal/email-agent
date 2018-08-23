@@ -1,20 +1,22 @@
 package com.mashjulal.android.emailagent.ui.main
 
+import com.arellomobile.mvp.InjectViewState
 import com.mashjulal.android.emailagent.data.repository.mail.DefaultMailRepository
 import com.mashjulal.android.emailagent.data.repository.mail.FolderRepositoryImpl
 import com.mashjulal.android.emailagent.domain.model.EmailHeader
+import com.mashjulal.android.emailagent.domain.model.Folder
 import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
-import com.mashjulal.android.emailagent.ui.base.MvpView
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
+@InjectViewState
 class MainPresenter @Inject constructor(
         private val mailDomainRepository: MailDomainRepository,
         private val preferenceManager: PreferenceManager,
@@ -24,6 +26,12 @@ class MainPresenter @Inject constructor(
     private lateinit var currentUser: User
     private lateinit var currentFolder: String
     private lateinit var folders: List<String>
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        requestUserAndFolderList()
+        requestUpdateMailList(Folder.INBOX.name, 0)
+    }
 
     fun requestUserAndFolderList() {
         Single.fromCallable {
@@ -38,7 +46,7 @@ class MainPresenter @Inject constructor(
         }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { fldrs ->
-                    view?.updateFolderList(fldrs)
+                    viewState.updateFolderList(fldrs)
                 }
     }
 
@@ -60,20 +68,13 @@ class MainPresenter @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { data: List<EmailHeader> -> view?.updateMailList(data)},
-                        { _ -> view?.stopUpdatingMailList()}
+                        { data: List<EmailHeader> -> viewState.updateMailList(data)},
+                        { _ -> viewState.stopUpdatingMailList()}
                 )
     }
 
     fun onEmailClick(messageNumber: Int) {
-        view?.showMessageContent(currentUser, messageNumber)
+        viewState.showMessageContent(currentUser, messageNumber)
     }
 
-}
-
-interface MainView: MvpView {
-    fun updateMailList(mail: List<EmailHeader>)
-    fun stopUpdatingMailList()
-    fun showMessageContent(user: User, messageNumber: Int)
-    fun updateFolderList(folders: List<String>)
 }

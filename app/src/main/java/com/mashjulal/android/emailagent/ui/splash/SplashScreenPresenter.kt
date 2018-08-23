@@ -1,25 +1,21 @@
 package com.mashjulal.android.emailagent.ui.splash
 
+import com.arellomobile.mvp.InjectViewState
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
-import com.mashjulal.android.emailagent.ui.base.MvpView
 import javax.inject.Inject
 
+@InjectViewState
 class SplashScreenPresenter @Inject constructor(
         private val preferenceManager: PreferenceManager
 ) : BasePresenter<SplashScreenView>() {
 
-    fun onInit() {
+    override fun onFirstViewAttach() {
         if (preferenceManager.isAnyUserLogged()) {
-            view?.showMailBox()
+            viewState.navToMailBox()
         } else {
-            view?.showAuth()
+            viewState.navToAuth()
         }
     }
-
 }
 
-interface SplashScreenView : MvpView {
-    fun showMailBox()
-    fun showAuth()
-}

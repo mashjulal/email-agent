@@ -10,23 +10,29 @@ import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.ArrayAdapter
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mashjulal.android.emailagent.R
 import com.mashjulal.android.emailagent.domain.model.EmailHeader
 import com.mashjulal.android.emailagent.domain.model.Folder
 import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.ui.base.BaseActivity
 import com.mashjulal.android.emailagent.ui.messagecontent.MessageContentActivity
 import com.mashjulal.android.emailagent.ui.utils.EndlessRecyclerViewScrollListener
-import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.content_message_navigation_drawer.*
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity(), MainView {
+class MainActivity : BaseActivity(), MainView {
 
     @Inject
+    @InjectPresenter
     lateinit var presenter: MainPresenter
+
+    @ProvidePresenter
+    fun providePresenter() = presenter
 
     private lateinit var onEndlessScrollListener: EndlessRecyclerViewScrollListener
     private lateinit var mailListAdapter: MailBoxRecyclerViewAdapter
@@ -40,12 +46,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
-        presenter.attachView(this)
-
-        presenter.requestUserAndFolderList()
         initRecyclerView()
-        presenter.requestUpdateMailList(Folder.INBOX.name, 0)
     }
 
     override fun onBackPressed() {
@@ -69,16 +70,6 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
             }
         }
         recyclerView.addOnScrollListener(onEndlessScrollListener)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.attachView(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter.detachView()
     }
 
     override fun updateMailList(mail: List<EmailHeader>) {

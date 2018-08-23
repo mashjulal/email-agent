@@ -7,13 +7,15 @@ import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ImageSpan
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mashjulal.android.emailagent.R
 import com.mashjulal.android.emailagent.domain.model.Attachment
 import com.mashjulal.android.emailagent.domain.model.EmailContent
 import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.ui.base.BaseActivity
 import com.mashjulal.android.emailagent.ui.utils.saveToAppFiles
 import com.mashjulal.android.emailagent.ui.utils.showFile
-import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -23,10 +25,15 @@ import net.nightwhistler.htmlspanner.handlers.ImageHandler
 import org.htmlcleaner.TagNode
 import javax.inject.Inject
 
-class MessageContentActivity : DaggerAppCompatActivity(), MessageContentView {
+
+class MessageContentActivity : BaseActivity(), MessageContentView {
 
     @Inject
+    @InjectPresenter
     lateinit var presenter: MessageContentPresenter
+
+    @ProvidePresenter
+    fun providePresenter() = presenter
 
     private lateinit var attachmentAdapter: AttachmentListAdapter
     private lateinit var attachments: List<Attachment>
@@ -63,17 +70,6 @@ class MessageContentActivity : DaggerAppCompatActivity(), MessageContentView {
             showFile(this, attachmentFile, attachment.contentType)
         }
         rv_attachments.adapter = attachmentAdapter
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        presenter.attachView(this)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        presenter.detachView()
     }
 
     override fun showMessageTitle(subject: String) {

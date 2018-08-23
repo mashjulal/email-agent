@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     signingConfigs {
@@ -15,6 +16,11 @@ android {
         versionCode VERSION_CODE
         versionName VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
     }
     buildTypes {
         release {
@@ -74,6 +80,13 @@ dependencies {
 
     // Firebase
     implementation firebase.database
+
+    // Moxy
+    implementation moxy.core
+    kapt moxy.compiler
+
+    // Timber Logging
+    implementation timber.timber
 
     // Testing
     testImplementation testing.junit

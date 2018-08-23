@@ -21,10 +21,13 @@ ext {
             room: '1.1.1',
             saferoom: '0.4.4',
             firebase: '11.8.0',
+            moxy: '1.5.5',
 
             junit: '4.12',
             espresso: '3.0.2',
-            android_runner: '1.0.2'
+            android_runner: '1.0.2',
+
+            timber: '4.7.1'
     ]
 
     kotlinsdk = [
@@ -77,9 +80,18 @@ ext {
             database: "com.google.firebase:firebase-database:$versions.firebase"
     ]
 
+    moxy = [
+            core: "com.arello-mobile:moxy:$versions.moxy",
+            compiler: "com.arello-mobile:moxy-compiler:$versions.moxy"
+    ]
+
     testing = [
             junit: "junit:junit:$versions.junit",
             androidRunner: "com.android.support.test:runner:$versions.android_runner",
             espresso: "com.android.support.test.espresso:espresso-core:$versions.espresso"
+    ]
+
+    timber = [
+            timber: "com.jakewharton.timber:timber:$versions.timber"
     ]
 }

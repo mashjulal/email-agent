@@ -1,24 +1,14 @@
 package com.mashjulal.android.emailagent.ui.base
 
-open class BasePresenter<V : MvpView>: Presenter<V> {
+import com.arellomobile.mvp.MvpPresenter
+import com.arellomobile.mvp.MvpView
+import io.reactivex.disposables.CompositeDisposable
 
-    var view: V? = null
+open class BasePresenter<V: MvpView>(): MvpPresenter<V>() {
+    val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    override fun attachView(view: V) {
-        this.view = view
-    }
-
-    override fun detachView() {
-        view = null
-    }
-
-    fun isViewAttached() = view != null
-
-    fun checkViewAttached() {
-        if (!isViewAttached()) throw MvpViewNotAttachedException()
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
     }
 }
-
-class MvpViewNotAttachedException: RuntimeException(
-        "Please call Presenter.attachView(MvpView) before requestiong data to the Presenter"
-)

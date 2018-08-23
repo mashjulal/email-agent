@@ -1,19 +1,29 @@
 apply from : 'dependencies.gradle'
 
 buildscript {
-    ext {
-        gradle_version = '3.1.4'
-        kotlin_version = '1.2.50'
-        google_services_version = '4.1.0'
-    }
+
     repositories {
         google()
         jcenter()
     }
+    ext {
+        ANDROID_PLUGIN_VERSION = '3.1.4'
+        KOTLIN_PLUGIN_VERSION = '1.2.50'
+        DEXCOUNT_PLUGIN_VERSION = '0.8.3'
+        GOOGLE_SERVICES_VERSION = '4.1.0'
+        pluginLibs = [
+                android: "com.android.tools.build:gradle:$ANDROID_PLUGIN_VERSION",
+                kotlin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN_PLUGIN_VERSION",
+                dexcount: "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$DEXCOUNT_PLUGIN_VERSION",
+                googleServices: "com.google.gms:google-services:$GOOGLE_SERVICES_VERSION"
+        ]
+    }
+
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradle_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.google.gms:google-services:$google_services_version"
+        classpath pluginLibs.android
+        classpath pluginLibs.kotlin
+        classpath pluginLibs.dexcount
+        classpath pluginLibs.googleServices
     }
 }
 
