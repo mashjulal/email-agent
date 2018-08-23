@@ -7,6 +7,7 @@ import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
+import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import com.mashjulal.android.emailagent.ui.base.MvpView
 import io.reactivex.Single
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
         private val mailDomainRepository: MailDomainRepository,
+        private val preferenceManager: PreferenceManager,
         private val accountRepository: AccountRepository
 ): BasePresenter<MainView>() {
 
@@ -23,8 +25,9 @@ class MainPresenter @Inject constructor(
     private lateinit var currentFolder: String
     private lateinit var folders: List<String>
 
-    fun requestUserAndFolderList(userId: Long) {
+    fun requestUserAndFolderList() {
         Single.fromCallable {
+            val userId = preferenceManager.getLastSelectedUserId()
             currentUser = accountRepository.getUserById(userId)
             val domain = currentUser.address.substringAfter("@").substringBefore(".")
             val folderRep = FolderRepositoryImpl(

@@ -43,10 +43,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
 
         presenter.attachView(this)
 
-        intent.let {
-            val id = it.getLongExtra(ARG_ID, -1L)
-            presenter.requestUserAndFolderList(id)
-        }
+        presenter.requestUserAndFolderList()
         initRecyclerView()
         presenter.requestUpdateMailList(Folder.INBOX.name, 0)
     }
@@ -117,11 +114,7 @@ class MainActivity : DaggerAppCompatActivity(), MainView {
 
     companion object {
 
-        private const val ARG_ID = "id"
-
-        fun newIntent(context: Context, userId: Long) : Intent =
-                Intent(context, MainActivity::class.java).apply {
-                    putExtra(ARG_ID, userId)
-                }
+        fun newIntent(context: Context) : Intent =
+                Intent(context, MainActivity::class.java)
     }
 }

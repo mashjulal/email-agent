@@ -5,8 +5,10 @@ import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
+import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import com.mashjulal.android.emailagent.ui.base.MvpView
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -16,7 +18,8 @@ import javax.mail.AuthenticationFailedException
 
 class AuthPresenter @Inject constructor(
         private val accountRepository: AccountRepository,
-        private val mailDomainRepository: MailDomainRepository
+        private val mailDomainRepository: MailDomainRepository,
+        private val preferenceManager: PreferenceManager
 ): BasePresenter<AuthView>() {
 
     fun startAuth() {
@@ -33,9 +36,12 @@ class AuthPresenter @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .flatMapCompletable { mailDomain -> StoreUtils.auth(mailDomain, user) }
                 .andThen(Single.fromCallable { accountRepository.addUser(user) })
+                .flatMapCompletable { userId ->
+                    Completable.fromAction { preferenceManager.setLastSelectedUserId(userId) }
+                }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { userId: Long -> view?.completeAuthorization(userId) },
+                        { view?.completeAuthorization() },
                         { e: Throwable -> authFailed(e) }
                 )
     }
@@ -60,6 +66,6 @@ class AuthPresenter @Inject constructor(
 
 interface AuthView: MvpView {
     fun showAuthForm()
-    fun completeAuthorization(userId: Long)
+    fun completeAuthorization()
     fun showError(error: String)
 }

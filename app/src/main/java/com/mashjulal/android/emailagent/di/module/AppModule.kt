@@ -1,7 +1,14 @@
 package com.mashjulal.android.emailagent.di.module
 
+import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.Resources
+import android.preference.PreferenceManager
 import dagger.Module
+import dagger.Provides
 import dagger.android.support.AndroidSupportInjectionModule
+import javax.inject.Singleton
 
 @Module(
         includes = [
@@ -12,4 +19,17 @@ import dagger.android.support.AndroidSupportInjectionModule
             FirebaseModule::class
         ]
 )
-class AppModule
+class AppModule {
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(app: Application): SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(app)
+
+    @Provides
+    @Singleton
+    fun provideContext(app: Application): Context = app.applicationContext
+
+    @Provides
+    @Singleton
+    fun provideResources(context: Context): Resources = context.resources
+}

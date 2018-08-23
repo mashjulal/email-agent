@@ -39,8 +39,8 @@ class AuthActivity : DaggerAppCompatActivity(), AuthView, AuthFormFragment.OnFra
                 .commit()
     }
 
-    override fun completeAuthorization(userId: Long) {
-        startActivity(MainActivity.newIntent(this, userId))
+    override fun completeAuthorization() {
+        startActivity(MainActivity.newIntent(this))
     }
 
     override fun showError(error: String) {
