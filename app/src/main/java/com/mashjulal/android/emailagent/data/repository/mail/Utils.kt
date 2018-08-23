@@ -14,7 +14,7 @@ object StoreUtils {
     const val SESSION_SMTP = 2
 
     fun createSession(mailDomain: MailDomain): Session {
-        val protocol = mailDomain.protocol
+        val protocol = mailDomain.protocol.name.toLowerCase()
         val properties = Properties()
         properties["mail.$protocol.host"] = mailDomain.host
         properties["mail.$protocol.port"] = mailDomain.port

@@ -8,7 +8,8 @@ import dagger.android.support.AndroidSupportInjectionModule
             AndroidSupportInjectionModule::class,
             ViewModule::class,
             RepositoryModule::class,
-            RoomModule::class
+            RoomModule::class,
+            FirebaseModule::class
         ]
 )
 class AppModule

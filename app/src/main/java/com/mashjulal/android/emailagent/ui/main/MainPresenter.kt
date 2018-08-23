@@ -3,6 +3,7 @@ package com.mashjulal.android.emailagent.ui.main
 import com.mashjulal.android.emailagent.data.repository.mail.DefaultMailRepository
 import com.mashjulal.android.emailagent.data.repository.mail.FolderRepositoryImpl
 import com.mashjulal.android.emailagent.domain.model.EmailHeader
+import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
@@ -25,10 +26,9 @@ class MainPresenter @Inject constructor(
     fun requestUserAndFolderList(userId: Long) {
         Single.fromCallable {
             currentUser = accountRepository.getUserById(userId)
-
-            val domains = mailDomainRepository.getByName("yandex")
+            val domain = currentUser.address.substringAfter("@").substringBefore(".")
             val folderRep = FolderRepositoryImpl(
-                    domains.first { it.protocol == "imap" }
+                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP)
             )
             folders = folderRep.getAll(currentUser)
             folders
@@ -46,11 +46,11 @@ class MainPresenter @Inject constructor(
 
     fun requestUpdateMailList(offset: Int) {
         Single.fromCallable {
-            val domains = mailDomainRepository.getByName("yandex")
+            val domain = currentUser.address.substringAfter("@").substringBefore(".")
             val mailRep = DefaultMailRepository(
                     currentFolder,
-                    domains.first { it.protocol == "imap" },
-                    domains.first { it.protocol == "smtp" }
+                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP),
+                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.SMTP)
             )
             mailRep.getMailHeaders(currentUser, offset)
         }

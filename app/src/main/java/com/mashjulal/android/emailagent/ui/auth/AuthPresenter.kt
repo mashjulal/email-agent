@@ -1,6 +1,7 @@
 package com.mashjulal.android.emailagent.ui.auth
 
 import com.mashjulal.android.emailagent.data.repository.mail.StoreUtils
+import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
@@ -26,7 +27,7 @@ class AuthPresenter @Inject constructor(
         val user = User(0, "", email, pwd)
         Single.fromCallable {
             val domain = user.address.substringAfter("@").substringBefore(".")
-            val mailDomain = mailDomainRepository.getByName(domain).first { it.protocol == "imap" }
+            val mailDomain = mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP)
             mailDomain
         }
                 .subscribeOn(Schedulers.io())

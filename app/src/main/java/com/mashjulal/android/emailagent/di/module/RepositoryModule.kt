@@ -1,8 +1,9 @@
 package com.mashjulal.android.emailagent.di.module
 
+import com.google.firebase.database.DatabaseReference
 import com.mashjulal.android.emailagent.data.repository.mail.AccountRepositoryImpl
+import com.mashjulal.android.emailagent.data.repository.mail.MailDomainRepositoryImpl
 import com.mashjulal.android.emailagent.data.repository.mail.room.AccountDao
-import com.mashjulal.android.emailagent.data.repository.mail.stub.MailDomainRepositoryStub
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import dagger.Module
@@ -19,5 +20,6 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesMailDomainRepository(): MailDomainRepository = MailDomainRepositoryStub()
+    fun providesMailDomainRepository(db: DatabaseReference): MailDomainRepository
+            = MailDomainRepositoryImpl(db)
 }
