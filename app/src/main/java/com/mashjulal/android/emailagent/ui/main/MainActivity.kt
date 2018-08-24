@@ -73,7 +73,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun updateMailList(mail: List<EmailHeader>) {
-        (recyclerView.adapter as MailBoxRecyclerViewAdapter).addData(mail)
+        mailListAdapter.addData(mail)
     }
 
     override fun stopUpdatingMailList() {

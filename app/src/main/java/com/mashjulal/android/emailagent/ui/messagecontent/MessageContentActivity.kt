@@ -14,8 +14,8 @@ import com.mashjulal.android.emailagent.domain.model.Attachment
 import com.mashjulal.android.emailagent.domain.model.EmailContent
 import com.mashjulal.android.emailagent.domain.model.User
 import com.mashjulal.android.emailagent.ui.base.BaseActivity
-import com.mashjulal.android.emailagent.ui.utils.saveToAppFiles
 import com.mashjulal.android.emailagent.ui.utils.showFile
+import com.mashjulal.android.emailagent.utils.saveToAppFiles
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

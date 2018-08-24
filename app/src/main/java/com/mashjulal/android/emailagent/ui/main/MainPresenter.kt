@@ -12,6 +12,7 @@ import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import com.mashjulal.android.emailagent.utils.addToComposite
+import com.mashjulal.android.emailagent.utils.getDomainFromEmail
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -35,16 +36,19 @@ class MainPresenter @Inject constructor(
     }
 
     private fun requestUserAndFolderList() {
-        Single.fromCallable {
-            val userId = preferenceManager.getLastSelectedUserId()
-            currentUser = accountRepository.getUserById(userId)
-            val domain = currentUser.address.substringAfter("@").substringBefore(".")
-            val folderRep = FolderRepositoryImpl(
-                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP)
-            )
-            folders = folderRep.getAll(currentUser)
-            folders
-        }.subscribeOn(Schedulers.io())
+        preferenceManager.getLastSelectedUserId()
+                .flatMapMaybe { userId -> accountRepository.getUserById(userId) }
+                .flatMapSingle {
+                    Single.fromCallable {
+                        currentUser = it
+                        val folderRep = FolderRepositoryImpl(
+                                mailDomainRepository.getByNameAndProtocol(
+                                        getDomainFromEmail(currentUser.address), Protocol.IMAP)
+                        )
+                        folders = folderRep.getAll(currentUser)
+                        folders
+                    }
+                }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { fldrs ->
                     viewState.updateFolderList(fldrs)
@@ -52,9 +56,8 @@ class MainPresenter @Inject constructor(
     }
 
     private fun requestUserList() {
-        Single.fromCallable {
-            accountRepository.getAll()
-        }.subscribeOn(Schedulers.io())
+        accountRepository.getAll()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { users ->
                     viewState.updateUserList(users)
@@ -68,7 +71,7 @@ class MainPresenter @Inject constructor(
 
     fun requestUpdateMailList(offset: Int) {
         Single.fromCallable {
-            val domain = currentUser.address.substringAfter("@").substringBefore(".")
+            val domain = getDomainFromEmail(currentUser.address)
             val mailRep = DefaultMailRepository(
                     currentFolder,
                     mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP),

@@ -9,7 +9,7 @@ import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import com.mashjulal.android.emailagent.utils.addToComposite
-import io.reactivex.Completable
+import com.mashjulal.android.emailagent.utils.getDomainFromEmail
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -27,16 +27,14 @@ class AuthFormPresenter @Inject constructor(
     fun tryToAuth(email: String, pwd: String) {
         val user = User(0, "", email, pwd)
         Single.fromCallable {
-            val domain = user.address.substringAfter("@").substringBefore(".")
-            val mailDomain = mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP)
+            val mailDomain = mailDomainRepository.getByNameAndProtocol(
+                    getDomainFromEmail(user.address), Protocol.IMAP)
             mailDomain
         }
                 .subscribeOn(Schedulers.io())
                 .flatMapCompletable { mailDomain -> StoreUtils.auth(mailDomain, user) }
-                .andThen(Single.fromCallable { accountRepository.addUser(user) })
-                .flatMapCompletable { userId ->
-                    Completable.fromAction { preferenceManager.setLastSelectedUserId(userId) }
-                }
+                .andThen(accountRepository.addUser(user))
+                .flatMapCompletable { userId -> preferenceManager.setLastSelectedUserId(userId) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { viewState.completeAuthorization() },

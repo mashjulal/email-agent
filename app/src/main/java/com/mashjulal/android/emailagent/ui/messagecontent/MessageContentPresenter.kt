@@ -8,6 +8,7 @@ import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import com.mashjulal.android.emailagent.utils.addToComposite
+import com.mashjulal.android.emailagent.utils.getDomainFromEmail
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -20,21 +21,21 @@ class MessageContentPresenter @Inject constructor(
 ): BasePresenter<MessageContentView>() {
 
     fun requestMessageContent(userId: Long, messageNumber: Int) {
-        Single.fromCallable {
-            val user = accountRepository.getUserById(userId)
-            val domain = user.address.substringAfter("@").substringBefore(".")
+        accountRepository.getUserById(userId)
+                .flatMapSingle { user -> Single.fromCallable {
+                    val domain = getDomainFromEmail(user.address)
 
-            val mailRep = DefaultMailRepository(
-                    Folder.INBOX.name,
-                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP),
-                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.SMTP)
-            )
-            val message = mailRep.getMailByNumber(user, messageNumber)
-            val subject = message.emailHeader.subject
-            val content = message.content
+                    val mailRep = DefaultMailRepository(
+                            Folder.INBOX.name,
+                            mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP),
+                            mailDomainRepository.getByNameAndProtocol(domain, Protocol.SMTP)
+                    )
+                    val message = mailRep.getMailByNumber(user, messageNumber)
+                    val subject = message.emailHeader.subject
+                    val content = message.content
 
-            subject to content
-        }
+                    subject to content
+                } }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { (subject, content) ->

@@ -1,4 +1,4 @@
-package com.mashjulal.android.emailagent.ui.utils
+package com.mashjulal.android.emailagent.utils
 
 import android.content.Context
 import android.os.Environment
@@ -7,8 +7,8 @@ import java.io.InputStream
 
 fun File.copyInputStreamToFile(input: InputStream) {
     input.use {
-        this.outputStream().use {
-            input.copyTo(it)
+        this.outputStream().use { fileOut ->
+            input.copyTo(fileOut)
         }
     }
 }
