@@ -10,4 +10,6 @@ interface MainView : BaseView {
     fun showMessageContent(user: User, messageNumber: Int)
     fun updateFolderList(folders: List<String>)
     fun updateUserList(users: List<User>)
+    fun setCurrentUser(user: User, position: Int)
+    fun setCurrentFolder(folder: String, position: Int)
 }

@@ -12,4 +12,5 @@
     <string name="hint_password">Password</string>
     <string name="title_sing_in">Sing In</string>
     <string name="title_new_email">New email</string>
+    <string name="new_user">New User</string>
 </resources>
