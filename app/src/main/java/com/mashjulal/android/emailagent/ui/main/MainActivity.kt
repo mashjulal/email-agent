@@ -9,7 +9,6 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.ArrayAdapter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mashjulal.android.emailagent.R
@@ -17,6 +16,8 @@ import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import com.mashjulal.android.emailagent.ui.auth.AuthActivity
 import com.mashjulal.android.emailagent.ui.base.BaseActivity
+import com.mashjulal.android.emailagent.ui.main.menu.AccountListAdapter
+import com.mashjulal.android.emailagent.ui.main.menu.FolderListAdapter
 import com.mashjulal.android.emailagent.ui.messagecontent.MessageContentActivity
 import com.mashjulal.android.emailagent.ui.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,8 +37,8 @@ class MainActivity : BaseActivity(), MainView {
 
     private lateinit var onEndlessScrollListener: EndlessRecyclerViewScrollListener
     private lateinit var mailListAdapter: MailBoxRecyclerViewAdapter
-    private lateinit var userListAdapter: ArrayAdapter<String>
-    private lateinit var folderListAdapter: ArrayAdapter<String>
+    private lateinit var userListAdapter: AccountListAdapter
+    private lateinit var folderListAdapter: FolderListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,45 +91,42 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun updateFolderList(folders: List<String>) {
-        folderListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_checked,
-                folders)
-        lv_folders.adapter = folderListAdapter
-        lv_folders.setOnItemClickListener { _, _, position, _ ->
+        folderListAdapter = FolderListAdapter(folders) {
             mailListAdapter.clear()
             onEndlessScrollListener.resetState()
             recyclerView.removeOnScrollListener(onEndlessScrollListener)
             recyclerView.addOnScrollListener(onEndlessScrollListener)
 
-            val selectedFolder = lv_folders.getItemAtPosition(position) as String
+            val selectedFolder = folderListAdapter.getSelected()
             presenter.requestUpdateMailList(selectedFolder, 0)
             drawer_layout.closeDrawer(GravityCompat.START)
         }
+        rv_folders.adapter = folderListAdapter
+        rv_folders.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
     override fun updateUserList(users: List<Account>) {
-        userListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_checked,
-                users.map { it.address })
-        lv_users.adapter = userListAdapter
-        lv_users.setOnItemClickListener { _, _, position, _ ->
+        userListAdapter = AccountListAdapter(users) { pos ->
             mailListAdapter.clear()
             onEndlessScrollListener.resetState()
             recyclerView.removeOnScrollListener(onEndlessScrollListener)
             recyclerView.addOnScrollListener(onEndlessScrollListener)
 
-            presenter.requestFolderList(position)
+            presenter.requestFolderList(pos)
             drawer_layout.closeDrawer(GravityCompat.START)
         }
+        rv_accounts.adapter = userListAdapter
     }
 
     override fun setCurrentUser(user: Account, position: Int) {
         tv_name.text = user.name
         tv_email.text = user.address
 
-        lv_users.setItemChecked(position, true)
+        userListAdapter.setSelected(position)
     }
 
     override fun setCurrentFolder(folder: String, position: Int) {
-        lv_folders.setItemChecked(position, true)
+        folderListAdapter.setSelected(position)
     }
 
     companion object {

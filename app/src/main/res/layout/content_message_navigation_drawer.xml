@@ -5,30 +5,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/lv_users"
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorBorder"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_accounts"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:choiceMode="singleChoice"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
+        android:orientation="vertical"
         android:scrollbars="none"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_account" />
 
-    <ListView
-        android:id="@+id/lv_folders"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_folders"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:choiceMode="singleChoice"
+        android:orientation="vertical"
         android:scrollbars="none"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        tools:listitem="@layout/item_folder" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -54,7 +66,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="top|center_horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/lv_folders"
+        app:layout_constraintBottom_toTopOf="@+id/rv_folders"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -64,6 +76,7 @@
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/borders"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.15" />
 
@@ -84,5 +97,26 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.9" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@color/colorSelected"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/rv_accounts"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorSelected"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="@id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>
