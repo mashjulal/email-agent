@@ -1,11 +1,11 @@
 package com.mashjulal.android.emailagent.domain.repository
 
-import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.domain.model.Account
 import io.reactivex.Maybe
 import io.reactivex.Single
 
 interface AccountRepository {
-    fun addUser(user: User): Single<Long>
-    fun getUserById(id: Long): Maybe<User>
-    fun getAll(): Single<List<User>>
+    fun addUser(user: Account): Single<Long>
+    fun getUserById(id: Long): Maybe<Account>
+    fun getAll(): Single<List<Account>>
 }

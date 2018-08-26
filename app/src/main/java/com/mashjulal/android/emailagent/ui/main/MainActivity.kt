@@ -13,8 +13,8 @@ import android.widget.ArrayAdapter
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mashjulal.android.emailagent.R
-import com.mashjulal.android.emailagent.domain.model.EmailHeader
-import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.domain.model.Account
+import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import com.mashjulal.android.emailagent.ui.auth.AuthActivity
 import com.mashjulal.android.emailagent.ui.base.BaseActivity
 import com.mashjulal.android.emailagent.ui.messagecontent.MessageContentActivity
@@ -85,7 +85,7 @@ class MainActivity : BaseActivity(), MainView {
         recyclerView.removeOnScrollListener(onEndlessScrollListener)
     }
 
-    override fun showMessageContent(user: User, messageNumber: Int) {
+    override fun showMessageContent(user: Account, messageNumber: Int) {
         startActivity(MessageContentActivity.newIntent(this, user, messageNumber))
     }
 
@@ -105,7 +105,7 @@ class MainActivity : BaseActivity(), MainView {
         }
     }
 
-    override fun updateUserList(users: List<User>) {
+    override fun updateUserList(users: List<Account>) {
         userListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_checked,
                 users.map { it.address })
         lv_users.adapter = userListAdapter
@@ -120,7 +120,7 @@ class MainActivity : BaseActivity(), MainView {
         }
     }
 
-    override fun setCurrentUser(user: User, position: Int) {
+    override fun setCurrentUser(user: Account, position: Int) {
         tv_name.text = user.name
         tv_email.text = user.address
 

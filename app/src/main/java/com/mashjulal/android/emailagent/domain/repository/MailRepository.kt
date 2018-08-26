@@ -1,11 +1,12 @@
 package com.mashjulal.android.emailagent.domain.repository
 
-import com.mashjulal.android.emailagent.domain.model.Email
-import com.mashjulal.android.emailagent.domain.model.EmailHeader
-import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.domain.model.email.Email
+import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
+import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 interface MailRepository {
-    fun getMail(user: User, folderName: String, offset: Int, count: Int): List<Email>
-    fun getMailHeaders(user: User, folderName: String, offset: Int, count: Int): List<EmailHeader>
-    fun getMailByNumber(user: User, folderName: String, number: Int): Email
+    fun getMail(): Flowable<List<Email>>
+    fun getMailHeaders(): Flowable<List<EmailHeader>>
+    fun getMailByNumber(number: Int): Maybe<Email>
 }

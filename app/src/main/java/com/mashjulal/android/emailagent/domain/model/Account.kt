@@ -1,6 +1,6 @@
 package com.mashjulal.android.emailagent.domain.model
 
-class User(
+class Account(
         val id: Long,
         val name: String,
         val address: String,

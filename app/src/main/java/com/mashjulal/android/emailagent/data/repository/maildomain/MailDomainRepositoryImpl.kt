@@ -1,4 +1,4 @@
-package com.mashjulal.android.emailagent.data.repository.mail
+package com.mashjulal.android.emailagent.data.repository.maildomain
 
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.android.gms.tasks.Tasks

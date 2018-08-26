@@ -10,9 +10,9 @@ import android.text.style.ImageSpan
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mashjulal.android.emailagent.R
-import com.mashjulal.android.emailagent.domain.model.Attachment
-import com.mashjulal.android.emailagent.domain.model.EmailContent
-import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.domain.model.Account
+import com.mashjulal.android.emailagent.domain.model.email.EmailAttachment
+import com.mashjulal.android.emailagent.domain.model.email.EmailContent
 import com.mashjulal.android.emailagent.ui.base.BaseActivity
 import com.mashjulal.android.emailagent.ui.utils.showFile
 import com.mashjulal.android.emailagent.utils.saveToAppFiles
@@ -36,7 +36,7 @@ class MessageContentActivity : BaseActivity(), MessageContentView {
     fun providePresenter() = presenter
 
     private lateinit var attachmentAdapter: AttachmentListAdapter
-    private lateinit var attachments: List<Attachment>
+    private lateinit var attachments: List<EmailAttachment>
 
     private val imageHandler = object: ImageHandler() {
         override fun handleTagNode(node: TagNode, builder: SpannableStringBuilder, start: Int, end: Int) {
@@ -95,7 +95,7 @@ class MessageContentActivity : BaseActivity(), MessageContentView {
         private const val ARG_ID = "id"
         private const val ARG_MESSAGE_NUMBER = "message_number"
 
-        fun newIntent(context: Context, user: User, messageNumber: Int) =
+        fun newIntent(context: Context, user: Account, messageNumber: Int) =
                 Intent(context, MessageContentActivity::class.java).apply {
                     putExtra(ARG_ID, user.id)
                     putExtra(ARG_MESSAGE_NUMBER, messageNumber)

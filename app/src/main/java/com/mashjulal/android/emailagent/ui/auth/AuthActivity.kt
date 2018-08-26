@@ -27,7 +27,8 @@ class AuthActivity : BaseActivity(), AuthView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        if (callingActivity.className == MainActivity::class.java.name) {
+        if (callingActivity != null &&
+                callingActivity.className == MainActivity::class.java.name) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
     }

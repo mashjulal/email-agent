@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.mashjulal.android.emailagent.R
-import com.mashjulal.android.emailagent.domain.model.EmailHeader
+import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import com.mashjulal.android.emailagent.ui.utils.createTextIcon
 import kotlinx.android.synthetic.main.item_message.view.*
 

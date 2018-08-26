@@ -1,4 +1,4 @@
-package com.mashjulal.android.emailagent.data.repository.prefs
+package com.mashjulal.android.emailagent.data.datasource.local.prefs
 
 import android.content.SharedPreferences
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager

@@ -1,9 +1,9 @@
 package com.mashjulal.android.emailagent.ui.auth.input
 
 import com.arellomobile.mvp.InjectViewState
-import com.mashjulal.android.emailagent.data.repository.mail.StoreUtils
+import com.mashjulal.android.emailagent.data.repository.StoreUtils
 import com.mashjulal.android.emailagent.domain.model.Protocol
-import com.mashjulal.android.emailagent.domain.model.User
+import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
@@ -25,7 +25,7 @@ class AuthFormPresenter @Inject constructor(
 ): BasePresenter<AuthFormView>() {
 
     fun tryToAuth(email: String, pwd: String) {
-        val user = User(0, "", email, pwd)
+        val user = Account(0, "", email, pwd)
         Single.fromCallable {
             val mailDomain = mailDomainRepository.getByNameAndProtocol(
                     getDomainFromEmail(user.address), Protocol.IMAP)

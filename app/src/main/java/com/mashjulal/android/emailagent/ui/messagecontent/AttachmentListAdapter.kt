@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.mashjulal.android.emailagent.R
-import com.mashjulal.android.emailagent.domain.model.Attachment
+import com.mashjulal.android.emailagent.domain.model.email.EmailAttachment
 import kotlinx.android.synthetic.main.item_attachment.view.*
 
 class AttachmentListAdapter(
-        private val data: MutableList<Attachment>,
+        private val data: MutableList<EmailAttachment>,
         private val onItemClickListener: (Int) -> Unit
 ): RecyclerView.Adapter<AttachmentListAdapter.ViewHolder>() {
 
@@ -30,7 +30,7 @@ class AttachmentListAdapter(
         }
     }
 
-    fun onNewData(newData: List<Attachment>) {
+    fun onNewData(newData: List<EmailAttachment>) {
         data.clear()
         data.addAll(newData)
         notifyDataSetChanged()

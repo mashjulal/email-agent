@@ -5,8 +5,12 @@ import android.arch.persistence.room.Room
 import android.text.Editable
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.mashjulal.android.emailagent.R
-import com.mashjulal.android.emailagent.data.repository.mail.room.AccountDao
-import com.mashjulal.android.emailagent.data.repository.mail.room.AppDatabase
+import com.mashjulal.android.emailagent.data.datasource.impl.local.db.AppDatabase
+import com.mashjulal.android.emailagent.data.datasource.impl.local.db.account.AccountDao
+import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.EmailAddressDao
+import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.EmailAttachmentDao
+import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.EmailDao
+import com.mashjulal.android.emailagent.data.datasource.impl.local.db.folder.FolderDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -27,4 +31,26 @@ class RoomModule {
     @Provides
     fun providesAccountDao(db: AppDatabase): AccountDao
             = db.getAccountDao()
+
+    @Singleton
+    @Provides
+    fun providesEmailDao(db: AppDatabase): EmailDao
+            = db.getEmailDao()
+
+    @Singleton
+    @Provides
+    fun providesEmailAddressDao(db: AppDatabase): EmailAddressDao
+            = db.getEmailAddressDao()
+
+    @Singleton
+    @Provides
+    fun providesEmailAttachmentDao(db: AppDatabase): EmailAttachmentDao
+            = db.getEmailAttachmentDao()
+
+    @Singleton
+    @Provides
+    fun providesFolderDao(db: AppDatabase): FolderDao
+            = db.getFolderDao()
+
+
 }

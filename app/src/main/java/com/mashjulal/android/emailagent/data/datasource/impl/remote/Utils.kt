@@ -1,7 +1,7 @@
-package com.mashjulal.android.emailagent.data.repository.mail
+package com.mashjulal.android.emailagent.data.datasource.impl.remote
 
+import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.MailDomain
-import com.mashjulal.android.emailagent.domain.model.User
 import io.reactivex.Completable
 import java.util.*
 import javax.mail.Session
@@ -22,7 +22,7 @@ object StoreUtils {
         return Session.getInstance(properties)
     }
 
-    fun connectToStore(user: User, session: Session, sessionType: Int): Store {
+    fun connectToStore(user: Account, session: Session, sessionType: Int): Store {
         lateinit var host: String
         lateinit var protocol: String
         when(sessionType) {
@@ -42,7 +42,7 @@ object StoreUtils {
         return store
     }
 
-    fun auth(mailDomain: MailDomain, user: User): Completable =
+    fun auth(mailDomain: MailDomain, user: Account): Completable =
             Completable.fromAction {
                 val session = createSession(mailDomain)
                 connectToStore(user, session, SESSION_IMAP)

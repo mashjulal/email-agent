@@ -2,10 +2,12 @@ package com.mashjulal.android.emailagent.di.module
 
 import android.content.SharedPreferences
 import com.google.firebase.database.DatabaseReference
-import com.mashjulal.android.emailagent.data.repository.mail.AccountRepositoryImpl
-import com.mashjulal.android.emailagent.data.repository.mail.MailDomainRepositoryImpl
-import com.mashjulal.android.emailagent.data.repository.mail.room.AccountDao
-import com.mashjulal.android.emailagent.data.repository.prefs.PreferenceManagerImpl
+import com.mashjulal.android.emailagent.data.datasource.api.AccountDataSource
+import com.mashjulal.android.emailagent.data.datasource.local.prefs.PreferenceManagerImpl
+import com.mashjulal.android.emailagent.data.repository.account.AccountRepositoryImpl
+import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactory
+import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactoryImpl
+import com.mashjulal.android.emailagent.data.repository.maildomain.MailDomainRepositoryImpl
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
@@ -18,8 +20,8 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesAccountRepository(accountDao: AccountDao): AccountRepository
-            = AccountRepositoryImpl(accountDao)
+    fun providesAccountRepository(accountDataSource: AccountDataSource): AccountRepository
+            = AccountRepositoryImpl(accountDataSource)
 
     @Singleton
     @Provides
@@ -30,4 +32,9 @@ class RepositoryModule {
     @Provides
     fun providesPreferenceManager(preferences: SharedPreferences): PreferenceManager
             = PreferenceManagerImpl(preferences)
+
+    @Singleton
+    @Provides
+    fun providesEmailDataStorageFactory(mailDomainRepository: MailDomainRepository): EmailRepositoryFactory
+            = EmailRepositoryFactoryImpl(mailDomainRepository)
 }
