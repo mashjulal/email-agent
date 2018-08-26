@@ -1,7 +1,7 @@
 package com.mashjulal.android.emailagent.data.datasource.impl.remote.folder
 
 import com.mashjulal.android.emailagent.data.datasource.api.FolderDataSource
-import com.mashjulal.android.emailagent.data.repository.StoreUtils
+import com.mashjulal.android.emailagent.data.datasource.impl.remote.StoreUtils
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.MailDomain
 import com.mashjulal.android.emailagent.utils.toIoSingle

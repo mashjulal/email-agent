@@ -19,8 +19,8 @@ class EmailRepositoryFactoryImpl @Inject constructor(
 
             val mailRep = DefaultEmailDataStorageRemoteImpl(
                     folder,
-                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP),
-                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.SMTP)
+                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.IMAP).blockingGet(),
+                    mailDomainRepository.getByNameAndProtocol(domain, Protocol.SMTP).blockingGet()
             )
             MailRepositoryImpl(account, folder, mailRep)
         }.toIoMaybe()

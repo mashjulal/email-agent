@@ -1,16 +1,15 @@
 package com.mashjulal.android.emailagent.ui.auth.input
 
 import com.arellomobile.mvp.InjectViewState
-import com.mashjulal.android.emailagent.data.repository.StoreUtils
-import com.mashjulal.android.emailagent.domain.model.Protocol
+import com.mashjulal.android.emailagent.data.datasource.impl.remote.StoreUtils
 import com.mashjulal.android.emailagent.domain.model.Account
+import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.domain.repository.AccountRepository
 import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
 import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import com.mashjulal.android.emailagent.utils.addToComposite
 import com.mashjulal.android.emailagent.utils.getDomainFromEmail
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import net.sqlcipher.database.SQLiteConstraintException
@@ -26,11 +25,8 @@ class AuthFormPresenter @Inject constructor(
 
     fun tryToAuth(email: String, pwd: String) {
         val user = Account(0, "", email, pwd)
-        Single.fromCallable {
-            val mailDomain = mailDomainRepository.getByNameAndProtocol(
-                    getDomainFromEmail(user.address), Protocol.IMAP)
-            mailDomain
-        }
+        mailDomainRepository.getByNameAndProtocol(
+                getDomainFromEmail(user.address), Protocol.IMAP)
                 .subscribeOn(Schedulers.io())
                 .flatMapCompletable { mailDomain -> StoreUtils.auth(mailDomain, user) }
                 .andThen(accountRepository.addUser(user))

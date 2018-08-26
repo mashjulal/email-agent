@@ -73,7 +73,7 @@ class MainPresenter @Inject constructor(
         Single.fromCallable {
             val folderRep = FolderDataStorageRemoteImpl(
                     mailDomainRepository.getByNameAndProtocol(
-                            getDomainFromEmail(currentUser.address), Protocol.IMAP)
+                            getDomainFromEmail(currentUser.address), Protocol.IMAP).blockingGet()
             )
             val allFolders = folderRep.getAll(currentUser).blockingGet()
             val defaultFolders = resources.getStringArray(R.array.folders_default)
@@ -129,6 +129,10 @@ class MainPresenter @Inject constructor(
 
     fun onEmailClick(messageNumber: Int) {
         viewState.showMessageContent(currentUser, messageNumber)
+    }
+
+    fun requestNewEmail() {
+        viewState.newEmail(currentUser)
     }
 
 }

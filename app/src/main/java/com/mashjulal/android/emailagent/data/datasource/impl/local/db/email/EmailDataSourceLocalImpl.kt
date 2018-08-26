@@ -9,6 +9,7 @@ import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.enti
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.folder.FolderDao
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.email.*
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import java.io.File
@@ -37,8 +38,10 @@ class EmailDataSourceLocalImpl @Inject constructor(
             .map {
                 it.map { entity ->
                     val from = emailAddressDao.getById(entity.fromAddressId).blockingGet()
+                    val to = emailAddressDao.getById(entity.toAddressId).blockingGet()
                     EmailHeader(entity.messageNumber, entity.subject,
                             EmailAddress(from.email, from.name),
+                            EmailAddress(to.email, to.name),
                             Date(entity.receivedDate), entity.isRead)
                 }
             }
@@ -50,11 +53,17 @@ class EmailDataSourceLocalImpl @Inject constructor(
             }
             .map { entityToModel(it) }
 
+    override fun sendMail(account: Account, folderName: String, email: Email): Completable {
+        throw UnsupportedOperationException()
+    }
+
     private fun entityToModel(emailEntity: EmailEntity): Email {
         val from = emailAddressDao.getById(emailEntity.fromAddressId).blockingGet()
+        val to = emailAddressDao.getById(emailEntity.toAddressId).blockingGet()
         val attachments = emailAttachmentDao.getAllByEmailId(emailEntity.id).blockingGet()
         val header = EmailHeader(emailEntity.messageNumber, emailEntity.subject,
                 EmailAddress(from.email, from.name),
+                EmailAddress(to.email, to.name),
                 Date(emailEntity.receivedDate), emailEntity.isRead)
         val attch = attachments.map { att ->
             val ext = MimeTypeMap.getFileExtensionFromUrl(att.path)

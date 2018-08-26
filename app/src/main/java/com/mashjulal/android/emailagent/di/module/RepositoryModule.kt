@@ -3,6 +3,8 @@ package com.mashjulal.android.emailagent.di.module
 import android.content.SharedPreferences
 import com.google.firebase.database.DatabaseReference
 import com.mashjulal.android.emailagent.data.datasource.api.AccountDataSource
+import com.mashjulal.android.emailagent.data.datasource.api.MailDomainDataStorage
+import com.mashjulal.android.emailagent.data.datasource.impl.remote.maildomain.MailDomainDataStorageRemoteImpl
 import com.mashjulal.android.emailagent.data.datasource.local.prefs.PreferenceManagerImpl
 import com.mashjulal.android.emailagent.data.repository.account.AccountRepositoryImpl
 import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactory
@@ -25,8 +27,13 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesMailDomainRepository(db: DatabaseReference): MailDomainRepository
-            = MailDomainRepositoryImpl(db)
+    fun providesMailDomainRepository(mailDomainDataStorage: MailDomainDataStorage): MailDomainRepository
+            = MailDomainRepositoryImpl(mailDomainDataStorage)
+
+    @Singleton
+    @Provides
+    fun providesMailDomainDataSource(dbReference: DatabaseReference): MailDomainDataStorage
+            = MailDomainDataStorageRemoteImpl(dbReference)
 
     @Singleton
     @Provides

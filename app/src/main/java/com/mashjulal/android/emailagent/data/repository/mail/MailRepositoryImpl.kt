@@ -5,6 +5,7 @@ import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.email.Email
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import com.mashjulal.android.emailagent.domain.repository.MailRepository
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 
@@ -13,6 +14,7 @@ class MailRepositoryImpl (
         private val folderName: String,
         private val remoteMailDataSource: EmailDataSource
 ): MailRepository {
+
     override fun getMail(): Flowable<List<Email>>
             = remoteMailDataSource.getMail(account, folderName)
 
@@ -22,4 +24,6 @@ class MailRepositoryImpl (
     override fun getMailByNumber(number: Int): Maybe<Email>
             = remoteMailDataSource.getMailByNumber(account, folderName, number)
 
+    override fun sendMail(email: Email): Completable
+            = remoteMailDataSource.sendMail(account, folderName, email)
 }

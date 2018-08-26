@@ -50,7 +50,7 @@ class MailBoxRecyclerViewAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val senderIcon: ImageView = itemView.iv_senderIcon
+        val senderIcon: ImageView = itemView.iv_account
         var tvSender: TextView = itemView.tv_sender
         var tvSubject: TextView = itemView.tv_subject
     }

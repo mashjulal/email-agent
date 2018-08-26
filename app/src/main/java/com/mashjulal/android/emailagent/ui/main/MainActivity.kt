@@ -19,6 +19,7 @@ import com.mashjulal.android.emailagent.ui.base.BaseActivity
 import com.mashjulal.android.emailagent.ui.main.menu.AccountListAdapter
 import com.mashjulal.android.emailagent.ui.main.menu.FolderListAdapter
 import com.mashjulal.android.emailagent.ui.messagecontent.MessageContentActivity
+import com.mashjulal.android.emailagent.ui.newemail.NewEmailActivity
 import com.mashjulal.android.emailagent.ui.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -52,6 +53,9 @@ class MainActivity : BaseActivity(), MainView {
         initRecyclerView()
         btn_newUser.setOnClickListener {
             startActivityForResult(AuthActivity.newIntent(this), 0)
+        }
+        fab_newEmail.setOnClickListener {
+            presenter.requestNewEmail()
         }
     }
 
@@ -127,6 +131,10 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun setCurrentFolder(folder: String, position: Int) {
         folderListAdapter.setSelected(position)
+    }
+
+    override fun newEmail(account: Account) {
+        startActivity(NewEmailActivity.newIntent(this, account.id))
     }
 
     companion object {

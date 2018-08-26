@@ -13,4 +13,10 @@
     <string name="title_sing_in">Sing In</string>
     <string name="title_new_email">New email</string>
     <string name="new_user">New User</string>
+    <string name="title_new_email_activity">New email…</string>
+    <string name="send">Send</string>
+    <string name="to">To</string>
+    <string name="subject">Subject</string>
+    <string name="text">Text</string>
+    <string name="subscription">Subscription</string>
 </resources>

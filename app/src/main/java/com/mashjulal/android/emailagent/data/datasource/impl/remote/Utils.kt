@@ -2,6 +2,7 @@ package com.mashjulal.android.emailagent.data.datasource.impl.remote
 
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.MailDomain
+import com.mashjulal.android.emailagent.domain.model.Protocol
 import io.reactivex.Completable
 import java.util.*
 import javax.mail.Session
@@ -13,12 +14,19 @@ object StoreUtils {
     const val SESSION_IMAP = 1
     const val SESSION_SMTP = 2
 
+    const val TIMEOUT = 20000
+
     fun createSession(mailDomain: MailDomain): Session {
         val protocol = mailDomain.protocol.name.toLowerCase()
         val properties = Properties()
         properties["mail.$protocol.host"] = mailDomain.host
-        properties["mail.$protocol.port"] = mailDomain.port
+        properties["mail.$protocol.port"] = mailDomain.port.toString()
         properties["mail.$protocol.auth"] = mailDomain.needAuth
+        properties["mail.$protocol.connectiontimeout"] = TIMEOUT.toString()
+        properties["mail.$protocol.timeout"] = TIMEOUT.toString()
+        if (mailDomain.protocol == Protocol.SMTP) {
+            properties["mail.$protocol.starttls.enable"] = "true"
+        }
         return Session.getInstance(properties)
     }
 
@@ -32,7 +40,7 @@ object StoreUtils {
             }
             SESSION_SMTP -> {
                 host = session.getProperty("mail.smtp.host")
-                protocol = "smtp"
+                protocol = "smtps"
             }
             else -> throw Exception("Unknown session type $sessionType")
         }

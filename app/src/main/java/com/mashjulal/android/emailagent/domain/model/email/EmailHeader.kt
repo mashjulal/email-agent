@@ -9,9 +9,12 @@ data class EmailHeader(
         val messageNumber: Int,
         val subject: String,
         val from: EmailAddress,
+        val to: EmailAddress,
         val receivedDate: Date,
         val isRead: Boolean
 ) {
     constructor(msg: Message): this(msg.messageNumber, msg.subject,
-            EmailAddress(msg.from[0] as InternetAddress), msg.receivedDate, msg.isSet(Flags.Flag.SEEN))
+            EmailAddress(msg.from[0] as InternetAddress),
+            EmailAddress(msg.allRecipients[0] as InternetAddress),
+            msg.receivedDate, msg.isSet(Flags.Flag.SEEN))
 }

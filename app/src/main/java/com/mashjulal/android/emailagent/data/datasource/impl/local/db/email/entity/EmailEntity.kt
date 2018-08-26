@@ -17,6 +17,9 @@ import com.mashjulal.android.emailagent.data.datasource.impl.local.db.folder.Fol
                     onUpdate = NO_ACTION, onDelete = CASCADE),
             ForeignKey(entity = EmailAddressEntity::class,
                     parentColumns = ["id"], childColumns = ["from_address_id"],
+                    onUpdate = NO_ACTION, onDelete = NO_ACTION),
+            ForeignKey(entity = EmailAddressEntity::class,
+                    parentColumns = ["id"], childColumns = ["to_address_id"],
                     onUpdate = NO_ACTION, onDelete = NO_ACTION)
         ],
         indices = [
@@ -36,6 +39,8 @@ data class EmailEntity (
         @ColumnInfo(name = "message_number")
         val messageNumber: Int,
         val subject: String,
+        @ColumnInfo(name = "to_address_id")
+        val toAddressId: Long,
         @ColumnInfo(name = "from_address_id")
         val fromAddressId: Long,
         @ColumnInfo(name = "received_at")

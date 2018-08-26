@@ -29,8 +29,12 @@
             android:parentActivityName=".ui.main.MainActivity" />
         <activity
             android:name=".ui.auth.AuthActivity"
-            android:noHistory="true"
-            />
+            android:noHistory="true" />
+        <activity
+            android:label="@string/title_new_email_activity"
+            android:name=".ui.newemail.NewEmailActivity"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:noHistory="true"/>
     </application>
 
 </manifest>

@@ -41,8 +41,8 @@ class AccountListAdapter(
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        val icon: ImageView = itemView.iv_senderIcon
-        val account: TextView = itemView.tv_account
+        val icon: ImageView = itemView.iv_account
+        val account: TextView = itemView.tv_address
         init {
             itemView.setOnClickListener(this)
         }

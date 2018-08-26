@@ -31,7 +31,8 @@ class MailDomainDataStorageRemoteImpl @Inject constructor(
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val host = snapshot.child("host").value as String
                             val port = snapshot.child("port").value as Long
-                            tcs.setResult(MailDomain(name, protocol, host, port.toInt()))
+                            val auth = snapshot.child("auth").value as Boolean
+                            tcs.setResult(MailDomain(name, protocol, host, port.toInt(), auth))
                         }
 
                     })
