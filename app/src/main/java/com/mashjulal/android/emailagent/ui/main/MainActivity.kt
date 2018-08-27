@@ -50,7 +50,6 @@ class MainActivity : BaseActivity(), MainView {
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-        initRecyclerView()
         btn_newUser.setOnClickListener {
             startActivityForResult(AuthActivity.newIntent(this), 0)
         }
@@ -76,10 +75,10 @@ class MainActivity : BaseActivity(), MainView {
         }
     }
 
-    private fun initRecyclerView() {
+    override fun initMailList() {
         mailListAdapter = MailBoxRecyclerViewAdapter(mutableListOf())
         { messageNumber -> presenter.onEmailClick(messageNumber)}
-                recyclerView.addItemDecoration(DividerItemDecoration(this, VERTICAL))
+        recyclerView.addItemDecoration(DividerItemDecoration(this, VERTICAL))
         recyclerView.adapter = mailListAdapter
 
         val layoutManager: LinearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
@@ -98,6 +97,7 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun stopUpdatingMailList() {
         recyclerView.removeOnScrollListener(onEndlessScrollListener)
+        mailListAdapter.setFooter(MailBoxRecyclerViewAdapter.FooterType.NO_RESULTS)
     }
 
     override fun showMessageContent(user: Account, messageNumber: Int) {

@@ -114,6 +114,7 @@ class MainPresenter @Inject constructor(
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe {
                         emailSubscription = it
+                        viewState.initMailList()
                     }
                     .doOnNext {
                         viewState.updateMailList(it)
@@ -133,6 +134,11 @@ class MainPresenter @Inject constructor(
 
     fun requestNewEmail() {
         viewState.newEmail(currentUser)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
     }
 
 }

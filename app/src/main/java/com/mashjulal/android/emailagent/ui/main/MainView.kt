@@ -13,4 +13,5 @@ interface MainView : BaseView {
     fun setCurrentUser(user: Account, position: Int)
     fun setCurrentFolder(folder: String, position: Int)
     fun newEmail(account: Account)
+    fun initMailList()
 }

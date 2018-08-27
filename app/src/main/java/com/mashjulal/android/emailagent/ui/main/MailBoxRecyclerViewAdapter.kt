@@ -8,20 +8,42 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.mashjulal.android.emailagent.R
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
+import com.mashjulal.android.emailagent.ui.utils.LoadingViewHolder
+import com.mashjulal.android.emailagent.ui.utils.NoResultsViewHolder
 import com.mashjulal.android.emailagent.ui.utils.createTextIcon
 import kotlinx.android.synthetic.main.item_message.view.*
 
 class MailBoxRecyclerViewAdapter(
         private val mMessages: MutableList<EmailHeader>,
         private val mItemSelectedListener: (Int) -> Unit
-) : RecyclerView.Adapter<MailBoxRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_message, parent, false)
-        return ViewHolder(v)
+    private var mFooterType = FooterType.LOADING
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        when (viewType) {
+            LoadingViewHolder.TYPE -> {
+                val v = LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_loading, parent, false)
+                return LoadingViewHolder(v)
+            }
+            NoResultsViewHolder.TYPE -> {
+                val v = LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_no_more_result, parent, false)
+                return NoResultsViewHolder(v)
+            }
+            else -> {
+                val v = LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_message, parent, false)
+                return ViewHolder(v)
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder !is ViewHolder) {
+            return
+        }
         val message = mMessages[position]
 
         holder.senderIcon.setImageDrawable(createTextIcon(message.from.name, message.from.email))
@@ -33,7 +55,17 @@ class MailBoxRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int {
-        return mMessages.size
+        return mMessages.size + 1
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        if (position == itemCount-1) {
+            return when (mFooterType) {
+                FooterType.LOADING -> LoadingViewHolder.TYPE
+                FooterType.NO_RESULTS -> NoResultsViewHolder.TYPE
+            }
+        }
+        return super.getItemViewType(position)
     }
 
     fun addData(messages: List<EmailHeader>) {
@@ -45,6 +77,15 @@ class MailBoxRecyclerViewAdapter(
     fun clear() {
         mMessages.clear()
         notifyDataSetChanged()
+    }
+
+    fun setFooter(type: FooterType) {
+        mFooterType = type
+        notifyItemChanged(itemCount)
+    }
+
+    enum class FooterType {
+        LOADING, NO_RESULTS
     }
 
 
