@@ -57,6 +57,15 @@ class MainActivity : BaseActivity(), MainView {
         fab_newEmail.setOnClickListener {
             presenter.requestNewEmail()
         }
+        swipeRefresh.setOnRefreshListener {
+            mailListAdapter.clear()
+            onEndlessScrollListener.resetState()
+            recyclerView.removeOnScrollListener(onEndlessScrollListener)
+            recyclerView.addOnScrollListener(onEndlessScrollListener)
+
+            val selectedFolder = folderListAdapter.getSelected()
+            presenter.requestUpdateMailList(selectedFolder, 0)
+        }
     }
 
     override fun onBackPressed() {
@@ -84,6 +93,7 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun updateMailList(mail: List<EmailHeader>) {
         mailListAdapter.addData(mail)
+        swipeRefresh.isRefreshing = false
     }
 
     override fun stopUpdatingMailList() {
