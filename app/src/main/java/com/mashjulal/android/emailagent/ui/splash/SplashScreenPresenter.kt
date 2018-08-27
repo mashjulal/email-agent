@@ -12,7 +12,7 @@ class SplashScreenPresenter @Inject constructor(
         private val preferenceManager: PreferenceManager
 ) : BasePresenter<SplashScreenView>() {
 
-    override fun onFirstViewAttach() {
+    fun onInit() {
         preferenceManager.isAnyUserLogged()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
