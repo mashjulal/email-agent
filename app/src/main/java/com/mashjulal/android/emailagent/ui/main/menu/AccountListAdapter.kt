@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_account.view.*
 
 class AccountListAdapter(
         private val accounts: List<Account>,
-        private val onItemClickListener: (Int) -> Unit
+        private val onItemClickListener: (Account) -> Unit
 ) : RecyclerView.Adapter<AccountListAdapter.UserViewHolder>() {
 
     private var selectedPosition = RecyclerView.NO_POSITION
@@ -51,7 +51,7 @@ class AccountListAdapter(
             if (adapterPosition == RecyclerView.NO_POSITION)
                 return
             setSelected(adapterPosition)
-            onItemClickListener.invoke(selectedPosition)
+            onItemClickListener.invoke(accounts[selectedPosition])
         }
     }
 }

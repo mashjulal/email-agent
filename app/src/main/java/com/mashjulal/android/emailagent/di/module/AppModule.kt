@@ -17,7 +17,8 @@ import javax.inject.Singleton
             RepositoryModule::class,
             RoomModule::class,
             FirebaseModule::class,
-            DataSourceModule::class
+            DataSourceModule::class,
+            InteractorModule::class
         ]
 )
 class AppModule {

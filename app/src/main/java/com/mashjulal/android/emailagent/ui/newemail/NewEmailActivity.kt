@@ -22,21 +22,13 @@ class NewEmailActivity : BaseActivity(), NewEmailView {
     @ProvidePresenter
     fun providePresenter() = presenter
 
-    private var accountId: Long = 0
     private lateinit var accountListAdapter: AccountListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_email)
 
-        parseArgs()
-        presenter.onInit(accountId)
-    }
-
-    private fun parseArgs() {
-        intent.let {
-            accountId = it.getLongExtra(ARG_ACCOUNT_ID, 0)
-        }
+        presenter.onInit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -75,12 +67,8 @@ class NewEmailActivity : BaseActivity(), NewEmailView {
 
     companion object {
 
-        private const val ARG_ACCOUNT_ID = "account-id"
-
-        fun newIntent(context: Context, accountId: Long) =
-                Intent(context, NewEmailActivity::class.java).apply {
-                    putExtra(ARG_ACCOUNT_ID, accountId)
-                }
+        fun newIntent(context: Context) =
+                Intent(context, NewEmailActivity::class.java)
 
     }
 }

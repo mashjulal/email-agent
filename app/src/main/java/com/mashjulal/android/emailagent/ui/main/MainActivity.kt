@@ -84,7 +84,7 @@ class MainActivity : BaseActivity(), MainView {
         val layoutManager: LinearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
         onEndlessScrollListener = object: EndlessRecyclerViewScrollListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                presenter.requestUpdateMailList(page)
+                presenter.requestUpdateMailList(offset = page)
             }
         }
         recyclerView.addOnScrollListener(onEndlessScrollListener)
@@ -120,13 +120,13 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun updateUserList(users: List<Account>) {
-        userListAdapter = AccountListAdapter(users) { pos ->
+        userListAdapter = AccountListAdapter(users) {
             mailListAdapter.clear()
             onEndlessScrollListener.resetState()
             recyclerView.removeOnScrollListener(onEndlessScrollListener)
             recyclerView.addOnScrollListener(onEndlessScrollListener)
 
-            presenter.requestFolderList(pos)
+            presenter.requestFolderList(it)
             drawer_layout.closeDrawer(GravityCompat.START)
         }
         rv_accounts.adapter = userListAdapter
@@ -143,8 +143,8 @@ class MainActivity : BaseActivity(), MainView {
         folderListAdapter.setSelected(position)
     }
 
-    override fun newEmail(account: Account) {
-        startActivity(NewEmailActivity.newIntent(this, account.id))
+    override fun newEmail() {
+        startActivity(NewEmailActivity.newIntent(this))
     }
 
     companion object {
