@@ -20,4 +20,5 @@
     <string name="text">Text</string>
     <string name="subscription">Subscription</string>
     <string name="no_more_results_were_found">No more results were found</string>
+    <string name="template_datetime">dd.MM.yy hh:mm</string>
 </resources>

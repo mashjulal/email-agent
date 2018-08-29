@@ -9,11 +9,10 @@
         android:id="@+id/iv_account"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="8dp"
+        android:contentDescription="@string/message_sender_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/message_sender_icon" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_sender"
@@ -24,7 +23,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         app:layout_constraintBottom_toTopOf="@+id/tv_subject"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_receivedAt"
         app:layout_constraintStart_toEndOf="@+id/iv_account"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,12 +33,30 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_isSeen"
         app:layout_constraintStart_toEndOf="@+id/iv_account"
         app:layout_constraintTop_toBottomOf="@+id/tv_sender" />
+
+    <ImageView
+        android:id="@+id/iv_isSeen"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_subject"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_subject"
+        app:srcCompat="@drawable/selector_unread" />
+
+    <TextView
+        android:id="@+id/tv_receivedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_sender"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_sender" />
 
 </android.support.constraint.ConstraintLayout>

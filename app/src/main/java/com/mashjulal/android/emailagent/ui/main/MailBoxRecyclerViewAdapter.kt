@@ -1,5 +1,6 @@
 package com.mashjulal.android.emailagent.ui.main
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,11 @@ import com.mashjulal.android.emailagent.ui.utils.LoadingViewHolder
 import com.mashjulal.android.emailagent.ui.utils.NoResultsViewHolder
 import com.mashjulal.android.emailagent.ui.utils.createTextIcon
 import kotlinx.android.synthetic.main.item_message.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MailBoxRecyclerViewAdapter(
+        private val context: Context,
         private val mMessages: MutableList<EmailHeader>,
         private val mItemSelectedListener: (Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -49,6 +53,10 @@ class MailBoxRecyclerViewAdapter(
         holder.senderIcon.setImageDrawable(createTextIcon(message.from.name, message.from.email))
         holder.tvSender.text = message.from.name
         holder.tvSubject.text = message.subject
+        holder.tvReceivedAt.text = SimpleDateFormat(
+                context.getString(R.string.template_datetime), Locale.ENGLISH)
+                .format(message.receivedDate)
+        holder.isSeen.isSelected = !message.isRead
         holder.itemView.setOnClickListener {
             mItemSelectedListener.invoke(message.messageNumber)
         }
@@ -94,5 +102,7 @@ class MailBoxRecyclerViewAdapter(
         val senderIcon: ImageView = itemView.iv_account
         var tvSender: TextView = itemView.tv_sender
         var tvSubject: TextView = itemView.tv_subject
+        var isSeen: ImageView = itemView.iv_isSeen
+        var tvReceivedAt: TextView = itemView.tv_receivedAt
     }
 }

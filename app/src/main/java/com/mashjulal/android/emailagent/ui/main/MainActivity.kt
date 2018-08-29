@@ -76,7 +76,7 @@ class MainActivity : BaseActivity(), MainView {
     }
 
     override fun initMailList() {
-        mailListAdapter = MailBoxRecyclerViewAdapter(mutableListOf())
+        mailListAdapter = MailBoxRecyclerViewAdapter(this, mutableListOf())
         { messageNumber -> presenter.onEmailClick(messageNumber)}
         recyclerView.addItemDecoration(DividerItemDecoration(this, VERTICAL))
         recyclerView.adapter = mailListAdapter
@@ -112,6 +112,7 @@ class MainActivity : BaseActivity(), MainView {
             recyclerView.addOnScrollListener(onEndlessScrollListener)
 
             val selectedFolder = folderListAdapter.getSelected()
+            setCurrentFolder(selectedFolder, it)
             presenter.requestUpdateMailList(selectedFolder, 0)
             drawer_layout.closeDrawer(GravityCompat.START)
         }
@@ -141,6 +142,7 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun setCurrentFolder(folder: String, position: Int) {
         folderListAdapter.setSelected(position)
+        supportActionBar?.title = folder
     }
 
     override fun newEmail() {
