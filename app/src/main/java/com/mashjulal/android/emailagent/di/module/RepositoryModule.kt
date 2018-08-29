@@ -4,15 +4,19 @@ import android.content.SharedPreferences
 import com.google.firebase.database.DatabaseReference
 import com.mashjulal.android.emailagent.data.datasource.api.AccountDataSource
 import com.mashjulal.android.emailagent.data.datasource.api.MailDomainDataStorage
+import com.mashjulal.android.emailagent.data.datasource.impl.remote.StoreUtils
 import com.mashjulal.android.emailagent.data.datasource.impl.remote.maildomain.MailDomainDataStorageRemoteImpl
 import com.mashjulal.android.emailagent.data.datasource.local.prefs.PreferenceManagerImpl
-import com.mashjulal.android.emailagent.data.repository.account.AccountRepositoryImpl
-import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactory
-import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactoryImpl
-import com.mashjulal.android.emailagent.data.repository.maildomain.MailDomainRepositoryImpl
-import com.mashjulal.android.emailagent.domain.repository.AccountRepository
-import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
-import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
+import com.mashjulal.android.emailagent.data.repository.api.AccountRepository
+import com.mashjulal.android.emailagent.data.repository.api.MailDomainRepository
+import com.mashjulal.android.emailagent.data.repository.api.PreferenceManager
+import com.mashjulal.android.emailagent.data.repository.impl.account.AccountRepositoryImpl
+import com.mashjulal.android.emailagent.data.repository.impl.folder.FolderRepositoryFactory
+import com.mashjulal.android.emailagent.data.repository.impl.folder.FolderRepositoryFactoryImpl
+import com.mashjulal.android.emailagent.data.repository.impl.mail.EmailRepositoryFactory
+import com.mashjulal.android.emailagent.data.repository.impl.mail.EmailRepositoryFactoryImpl
+import com.mashjulal.android.emailagent.data.repository.impl.maildomain.MailDomainRepositoryImpl
+import com.mashjulal.android.emailagent.utils.EmailUtils
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -42,6 +46,17 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesEmailDataStorageFactory(mailDomainRepository: MailDomainRepository): EmailRepositoryFactory
-            = EmailRepositoryFactoryImpl(mailDomainRepository)
+    fun providesEmailRepositoryFactory(mailDomainRepository: MailDomainRepository,
+                                       emailUtils: EmailUtils,
+                                       storeUtils: StoreUtils)
+            : EmailRepositoryFactory
+            = EmailRepositoryFactoryImpl(mailDomainRepository, emailUtils, storeUtils)
+
+    @Singleton
+    @Provides
+    fun providesFolderRepositoryFactory(mailDomainRepository: MailDomainRepository,
+                                        emailUtils: EmailUtils,
+                                        storeUtils: StoreUtils)
+            : FolderRepositoryFactory
+            = FolderRepositoryFactoryImpl(mailDomainRepository, emailUtils, storeUtils)
 }

@@ -1,7 +1,7 @@
 package com.mashjulal.android.emailagent.data.datasource.local.prefs
 
 import android.content.SharedPreferences
-import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
+import com.mashjulal.android.emailagent.data.repository.api.PreferenceManager
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject

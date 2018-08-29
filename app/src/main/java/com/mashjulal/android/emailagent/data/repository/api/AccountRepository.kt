@@ -1,4 +1,4 @@
-package com.mashjulal.android.emailagent.domain.repository
+package com.mashjulal.android.emailagent.data.repository.api
 
 import com.mashjulal.android.emailagent.domain.model.Account
 import io.reactivex.Maybe

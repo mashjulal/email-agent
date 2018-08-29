@@ -1,6 +1,6 @@
 package com.mashjulal.android.emailagent.domain.interactor.impl
 
-import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactory
+import com.mashjulal.android.emailagent.data.repository.impl.mail.EmailRepositoryFactory
 import com.mashjulal.android.emailagent.domain.interactor.GetEmailHeadersInteractor
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader

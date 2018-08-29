@@ -1,7 +1,7 @@
 package com.mashjulal.android.emailagent.ui.splash
 
 import com.arellomobile.mvp.InjectViewState
-import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
+import com.mashjulal.android.emailagent.data.repository.api.PreferenceManager
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

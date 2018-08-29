@@ -15,7 +15,7 @@ import com.mashjulal.android.emailagent.domain.model.email.EmailAttachment
 import com.mashjulal.android.emailagent.domain.model.email.EmailContent
 import com.mashjulal.android.emailagent.ui.base.BaseActivity
 import com.mashjulal.android.emailagent.ui.utils.showFile
-import com.mashjulal.android.emailagent.utils.saveToAppFiles
+import com.mashjulal.android.emailagent.utils.FileUtils
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -66,7 +66,8 @@ class MessageContentActivity : BaseActivity(), MessageContentView {
     private fun initAttachmentList() {
         attachmentAdapter = AttachmentListAdapter(mutableListOf()) {position ->
             val attachment = attachments[position]
-            val attachmentFile = saveToAppFiles(this, attachment.filename, attachment.inputStream)
+            val attachmentFile = FileUtils.saveToAppFiles(this, attachment.filename,
+                    attachment.inputStream)
             showFile(this, attachmentFile, attachment.contentType)
         }
         rv_attachments.adapter = attachmentAdapter

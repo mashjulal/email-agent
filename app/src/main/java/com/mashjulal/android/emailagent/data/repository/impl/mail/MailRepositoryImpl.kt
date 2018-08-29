@@ -1,10 +1,10 @@
-package com.mashjulal.android.emailagent.data.repository.mail
+package com.mashjulal.android.emailagent.data.repository.impl.mail
 
 import com.mashjulal.android.emailagent.data.datasource.api.EmailDataSource
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.email.Email
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
-import com.mashjulal.android.emailagent.domain.repository.MailRepository
+import com.mashjulal.android.emailagent.data.repository.api.MailRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe

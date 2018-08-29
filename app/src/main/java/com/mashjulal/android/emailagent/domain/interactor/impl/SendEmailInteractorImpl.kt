@@ -1,6 +1,6 @@
 package com.mashjulal.android.emailagent.domain.interactor.impl
 
-import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactory
+import com.mashjulal.android.emailagent.data.repository.impl.mail.EmailRepositoryFactory
 import com.mashjulal.android.emailagent.domain.interactor.SendEmailInteractor
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.Folder
@@ -8,7 +8,7 @@ import com.mashjulal.android.emailagent.domain.model.email.Email
 import com.mashjulal.android.emailagent.domain.model.email.EmailAddress
 import com.mashjulal.android.emailagent.domain.model.email.EmailContent
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
-import com.mashjulal.android.emailagent.domain.repository.AccountRepository
+import com.mashjulal.android.emailagent.data.repository.api.AccountRepository
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers

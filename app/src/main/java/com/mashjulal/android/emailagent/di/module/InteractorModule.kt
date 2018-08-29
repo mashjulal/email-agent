@@ -1,12 +1,15 @@
 package com.mashjulal.android.emailagent.di.module
 
 import android.content.res.Resources
-import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactory
+import com.mashjulal.android.emailagent.data.datasource.impl.remote.StoreUtils
+import com.mashjulal.android.emailagent.data.repository.api.AccountRepository
+import com.mashjulal.android.emailagent.data.repository.api.MailDomainRepository
+import com.mashjulal.android.emailagent.data.repository.api.PreferenceManager
+import com.mashjulal.android.emailagent.data.repository.impl.folder.FolderRepositoryFactory
+import com.mashjulal.android.emailagent.data.repository.impl.mail.EmailRepositoryFactory
 import com.mashjulal.android.emailagent.domain.interactor.*
 import com.mashjulal.android.emailagent.domain.interactor.impl.*
-import com.mashjulal.android.emailagent.domain.repository.AccountRepository
-import com.mashjulal.android.emailagent.domain.repository.MailDomainRepository
-import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
+import com.mashjulal.android.emailagent.utils.EmailUtils
 import dagger.Module
 import dagger.Provides
 
@@ -16,8 +19,13 @@ class InteractorModule {
     @Provides
     fun providesAuthInteractor(accountRepository: AccountRepository,
                                mailDomainRepository: MailDomainRepository,
-                               preferenceManager: PreferenceManager): AuthInteractor
-            = AuthInteractorImpl(accountRepository, mailDomainRepository, preferenceManager)
+                               preferenceManager: PreferenceManager,
+                               emailUtils: EmailUtils,
+                               storeUtils: StoreUtils
+
+    ): AuthInteractor
+            = AuthInteractorImpl(accountRepository, mailDomainRepository,
+            preferenceManager, emailUtils, storeUtils)
 
     @Provides
     fun providesGetAccountsWithCurrentInteractor(accountRepository: AccountRepository,
@@ -34,10 +42,10 @@ class InteractorModule {
     fun providesGetFoldersInteractor(resources: Resources,
                                      accountRepository: AccountRepository,
                                      preferenceManager: PreferenceManager,
-                                     mailDomainRepository: MailDomainRepository)
+                                     folderRepositoryFactory: FolderRepositoryFactory)
             : GetFoldersInteractor
             = GetFoldersInteractorImpl(resources, accountRepository,
-            preferenceManager, mailDomainRepository)
+            preferenceManager, folderRepositoryFactory)
 
     @Provides
     fun providesSendEmailInteractor(accountRepository: AccountRepository,
@@ -47,7 +55,7 @@ class InteractorModule {
 
     @Provides
     fun providesGetEmailContentInteractor(accountRepository: AccountRepository,
-                                    emailRepositoryFactory: EmailRepositoryFactory)
+                                          emailRepositoryFactory: EmailRepositoryFactory)
             : GetEmailContentInteractor
             = GetEmailContentInteractorImpl(accountRepository, emailRepositoryFactory)
 }

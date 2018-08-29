@@ -2,8 +2,8 @@ package com.mashjulal.android.emailagent.domain.interactor.impl
 
 import com.mashjulal.android.emailagent.domain.interactor.GetAccountsWithCurrentInteractor
 import com.mashjulal.android.emailagent.domain.model.Account
-import com.mashjulal.android.emailagent.domain.repository.AccountRepository
-import com.mashjulal.android.emailagent.domain.repository.PreferenceManager
+import com.mashjulal.android.emailagent.data.repository.api.AccountRepository
+import com.mashjulal.android.emailagent.data.repository.api.PreferenceManager
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber

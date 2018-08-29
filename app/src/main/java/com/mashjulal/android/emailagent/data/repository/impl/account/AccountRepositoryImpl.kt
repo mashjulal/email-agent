@@ -1,8 +1,8 @@
-package com.mashjulal.android.emailagent.data.repository.account
+package com.mashjulal.android.emailagent.data.repository.impl.account
 
 import com.mashjulal.android.emailagent.data.datasource.api.AccountDataSource
 import com.mashjulal.android.emailagent.domain.model.Account
-import com.mashjulal.android.emailagent.domain.repository.AccountRepository
+import com.mashjulal.android.emailagent.data.repository.api.AccountRepository
 import io.reactivex.Maybe
 import io.reactivex.Single
 import javax.inject.Inject

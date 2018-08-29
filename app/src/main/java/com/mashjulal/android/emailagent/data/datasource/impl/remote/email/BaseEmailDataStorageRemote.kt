@@ -24,11 +24,12 @@ import kotlin.math.max
 
 abstract class BaseEmailDataStorageRemote (
         imapMailDomain: MailDomain,
-        smtpMailDomain: MailDomain
+        smtpMailDomain: MailDomain,
+        private val storeUtils: StoreUtils
 ) : EmailDataSource {
 
-    private val imapSession: Session = StoreUtils.createSession(imapMailDomain)
-    private val smtpSession: Session = StoreUtils.createSession(smtpMailDomain)
+    private val imapSession: Session = storeUtils.createSession(imapMailDomain)
+    private val smtpSession: Session = storeUtils.createSession(smtpMailDomain)
 
     private val PAGE_SIZE = 10
 
@@ -68,7 +69,7 @@ abstract class BaseEmailDataStorageRemote (
     }
 
     private fun requestMailHeaders(account: Account, folderName: String, offset: Int): List<EmailHeader> {
-        val store = StoreUtils.connectToStore(account, imapSession, SESSION_IMAP)
+        val store = storeUtils.connectToStore(account, imapSession, SESSION_IMAP)
         val folder = store.getFolder(folderName)
         folder.open(Folder.READ_ONLY)
         val msgCnt = folder.messageCount
@@ -84,7 +85,7 @@ abstract class BaseEmailDataStorageRemote (
     }
 
     private fun requestMail(account: Account, folderName: String, offset: Int): List<Email> {
-        val store = StoreUtils.connectToStore(account, imapSession, SESSION_IMAP)
+        val store = storeUtils.connectToStore(account, imapSession, SESSION_IMAP)
         val folder = store.getFolder(folderName)
         folder.open(Folder.READ_ONLY)
         val msgCnt = folder.messageCount
@@ -104,7 +105,7 @@ abstract class BaseEmailDataStorageRemote (
 
     override fun getMailByNumber(account: Account, folderName: String, number: Int): Maybe<Email> {
         return Maybe.fromCallable {
-            val store = StoreUtils.connectToStore(account, imapSession, SESSION_IMAP)
+            val store = storeUtils.connectToStore(account, imapSession, SESSION_IMAP)
             val folder = store.getFolder(folderName)
             folder.open(Folder.READ_ONLY)
             val term = object: SearchTerm() {

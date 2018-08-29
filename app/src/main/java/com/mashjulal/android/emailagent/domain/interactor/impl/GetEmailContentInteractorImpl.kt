@@ -1,9 +1,9 @@
 package com.mashjulal.android.emailagent.domain.interactor.impl
 
-import com.mashjulal.android.emailagent.data.repository.mail.EmailRepositoryFactory
+import com.mashjulal.android.emailagent.data.repository.impl.mail.EmailRepositoryFactory
 import com.mashjulal.android.emailagent.domain.interactor.GetEmailContentInteractor
 import com.mashjulal.android.emailagent.domain.model.email.Email
-import com.mashjulal.android.emailagent.domain.repository.AccountRepository
+import com.mashjulal.android.emailagent.data.repository.api.AccountRepository
 import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber

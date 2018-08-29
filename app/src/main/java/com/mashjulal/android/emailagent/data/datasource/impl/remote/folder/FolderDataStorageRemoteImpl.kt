@@ -10,14 +10,15 @@ import javax.inject.Inject
 import javax.mail.Session
 
 class FolderDataStorageRemoteImpl @Inject constructor(
-        mailDomain: MailDomain
+        mailDomain: MailDomain,
+        private val storeUtils: StoreUtils
 ): FolderDataSource {
 
-    private val session: Session = StoreUtils.createSession(mailDomain)
+    private val session: Session = storeUtils.createSession(mailDomain)
 
     override fun getAll(account: Account): Single<List<String>> {
         return {
-            val store = StoreUtils.connectToStore(account, session, StoreUtils.SESSION_IMAP)
+            val store = storeUtils.connectToStore(account, session, storeUtils.SESSION_IMAP)
             val folders = store.defaultFolder.list("*").map { it.name }
             store.close()
             folders
