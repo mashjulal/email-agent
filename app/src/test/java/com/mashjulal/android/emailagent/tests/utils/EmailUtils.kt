@@ -1,9 +1,12 @@
-package com.mashjulal.android.emailagent.utils
+package com.mashjulal.android.emailagent.tests.utils
 
+import com.mashjulal.android.emailagent.utils.EmailUtils.getDomainFromEmail
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
 class EmailUtils {
+
+
 
     @Test
     fun test_getDomainFromEmail_Valid() {

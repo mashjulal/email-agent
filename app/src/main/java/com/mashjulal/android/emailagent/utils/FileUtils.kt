@@ -7,7 +7,7 @@ import java.io.InputStream
 
 
 object FileUtils {
-    fun File.copyInputStreamToFile(input: InputStream) {
+    private fun File.copyInputStreamToFile(input: InputStream) {
         input.use {
             this.outputStream().use { fileOut ->
                 input.copyTo(fileOut)
