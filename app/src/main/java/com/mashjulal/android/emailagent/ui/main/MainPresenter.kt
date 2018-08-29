@@ -5,10 +5,11 @@ import com.mashjulal.android.emailagent.domain.interactor.GetAccountsWithCurrent
 import com.mashjulal.android.emailagent.domain.interactor.GetEmailHeadersInteractor
 import com.mashjulal.android.emailagent.domain.interactor.GetFoldersInteractor
 import com.mashjulal.android.emailagent.domain.model.Account
+import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
+import com.mashjulal.android.emailagent.utils.ControlledPullSubscriber
 import com.mashjulal.android.emailagent.utils.addToComposite
 import io.reactivex.android.schedulers.AndroidSchedulers
-import org.reactivestreams.Subscription
 import javax.inject.Inject
 
 @InjectViewState
@@ -18,9 +19,10 @@ class MainPresenter @Inject constructor(
         private val getEmailHeadersInteractor: GetEmailHeadersInteractor
 ): BasePresenter<MainView>() {
 
+    private val initialPackCount: Long = 2
     private lateinit var currentUser: Account
     private lateinit var currentFolder: String
-    private var emailSubscription: Subscription? = null
+    private lateinit var emailHeaderSubscriber: ControlledPullSubscriber<List<EmailHeader>>
 
     override fun onFirstViewAttach() {
         onInit()
@@ -54,28 +56,25 @@ class MainPresenter @Inject constructor(
 
     fun requestUpdateMailList(folder: String = currentFolder, offset: Int) {
         if (offset > 0) {
-            emailSubscription?.request(1)
+            emailHeaderSubscriber.requestMore(1)
             return
         }
 
         currentFolder = folder
         compositeDisposable.clear()
-        emailSubscription?.cancel()
-        emailSubscription = null
+        if (this::emailHeaderSubscriber.isInitialized) {
+            emailHeaderSubscriber.dispose()
+        }
+        emailHeaderSubscriber = ControlledPullSubscriber(
+                { viewState.initMailList() },
+                { viewState.updateMailList(it) },
+                {},
+                { viewState.stopUpdatingMailList() },
+                initialPackCount
+        )
         getEmailHeadersInteractor.getHeaders(currentUser, currentFolder, offset)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    emailSubscription = it
-                    viewState.initMailList()
-                }
-                .doOnNext {
-                    viewState.updateMailList(it)
-                }
-                .doOnComplete {
-                    viewState.stopUpdatingMailList()
-                }
-                .subscribe()
-                .addToComposite(compositeDisposable)
+                .subscribe(emailHeaderSubscriber)
     }
 
     fun onEmailClick(messageNumber: Int) {
@@ -88,6 +87,7 @@ class MainPresenter @Inject constructor(
 
     override fun onDestroy() {
         super.onDestroy()
+        emailHeaderSubscriber.dispose()
         compositeDisposable.dispose()
     }
 
