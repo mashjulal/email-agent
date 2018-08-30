@@ -26,6 +26,9 @@ ext {
             junit: '4.12',
             espresso: '3.0.2',
             android_runner: '1.0.2',
+            mockitoAndroid      : '2.21.0',
+            mockitoCore         : '2.21.0',
+
 
             timber: '4.7.1'
     ]
@@ -89,7 +92,9 @@ ext {
     testing = [
             junit: "junit:junit:$versions.junit",
             androidRunner: "com.android.support.test:runner:$versions.android_runner",
-            espresso: "com.android.support.test.espresso:espresso-core:$versions.espresso"
+            espresso: "com.android.support.test.espresso:espresso-core:$versions.espresso",
+            mockitoAndroid: "org.mockito:mockito-android:$versions.mockitoAndroid",
+            mockitoCore: "org.mockito:mockito-core:$versions.mockitoCore"
     ]
 
     timber = [

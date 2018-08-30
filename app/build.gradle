@@ -94,4 +94,6 @@ dependencies {
     testImplementation testing.junit
     androidTestImplementation testing.androidRunner
     androidTestImplementation testing.espresso
+    testImplementation testing.mockitoCore
+    androidTestImplementation testing.mockitoAndroid
 }

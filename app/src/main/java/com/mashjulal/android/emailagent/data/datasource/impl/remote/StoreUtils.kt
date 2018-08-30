@@ -4,6 +4,7 @@ import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.MailDomain
 import com.mashjulal.android.emailagent.domain.model.Protocol
 import io.reactivex.Completable
+import timber.log.Timber
 import java.util.*
 import javax.mail.Session
 import javax.mail.Store
@@ -54,5 +55,7 @@ object StoreUtils {
             Completable.fromAction {
                 val session = createSession(mailDomain)
                 connectToStore(user, session, SESSION_IMAP)
+            }.doOnError {
+                Timber.e(it)
             }
 }

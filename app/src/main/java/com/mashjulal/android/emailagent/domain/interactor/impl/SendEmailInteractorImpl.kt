@@ -1,5 +1,6 @@
 package com.mashjulal.android.emailagent.domain.interactor.impl
 
+import com.mashjulal.android.emailagent.data.repository.api.AccountRepository
 import com.mashjulal.android.emailagent.data.repository.impl.mail.EmailRepositoryFactory
 import com.mashjulal.android.emailagent.domain.interactor.SendEmailInteractor
 import com.mashjulal.android.emailagent.domain.model.Account
@@ -8,9 +9,7 @@ import com.mashjulal.android.emailagent.domain.model.email.Email
 import com.mashjulal.android.emailagent.domain.model.email.EmailAddress
 import com.mashjulal.android.emailagent.domain.model.email.EmailContent
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
-import com.mashjulal.android.emailagent.data.repository.api.AccountRepository
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.*
@@ -22,17 +21,18 @@ class SendEmailInteractorImpl @Inject constructor(
 ): SendEmailInteractor {
 
     override fun sendEmail(account: Account, to: String, subject: String, text: String, subscription: String): Completable {
+        val header = EmailHeader(0, subject,
+                EmailAddress(account.address, account.name),
+                EmailAddress(to, ""), Date(), false)
+        val content = EmailContent("$text\n$subscription",
+                "", emptyList())
+        return sendEmail(account, Email(header, content))
+    }
+
+    override fun sendEmail(account: Account, email: Email): Completable {
         return emailRepositoryFactory.createRepository(account, Folder.SENT.name)
                 .subscribeOn(Schedulers.io())
-                .flatMap { Maybe.fromCallable {
-                    val header = EmailHeader(0, subject,
-                            EmailAddress(account.address, account.name),
-                            EmailAddress(to, ""), Date(), false)
-                    val content = EmailContent("$text\n$subscription",
-                            "", emptyList())
-                    it to Email(header, content)
-                } }
-                .flatMapCompletable { (rep, email) ->
+                .flatMapCompletable { rep ->
                     rep.sendMail(email)
                 }
                 .doOnError {
