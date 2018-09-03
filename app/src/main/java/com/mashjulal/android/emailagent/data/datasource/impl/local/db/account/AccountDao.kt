@@ -4,7 +4,6 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.account.entity.AccountEntity
-import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -17,5 +16,5 @@ interface AccountDao {
     fun getAll(): Single<List<AccountEntity>>
 
     @Query("SELECT * FROM account WHERE id = :id")
-    fun getById(id: Long): Maybe<AccountEntity>
+    fun getById(id: Long): Single<AccountEntity>
 }

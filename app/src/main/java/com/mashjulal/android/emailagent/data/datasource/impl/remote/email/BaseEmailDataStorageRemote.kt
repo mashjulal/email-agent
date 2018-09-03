@@ -8,10 +8,11 @@ import com.mashjulal.android.emailagent.domain.model.MailDomain
 import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.domain.model.email.Email
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
+import com.mashjulal.android.emailagent.utils.toIoSingle
 import io.reactivex.Completable
 import io.reactivex.Emitter
 import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import org.apache.commons.mail.util.MimeMessageParser
@@ -19,7 +20,10 @@ import java.util.concurrent.Callable
 import javax.mail.*
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
+import javax.mail.search.BodyTerm
+import javax.mail.search.OrTerm
 import javax.mail.search.SearchTerm
+import javax.mail.search.SubjectTerm
 import kotlin.math.max
 
 abstract class BaseEmailDataStorageRemote (
@@ -103,8 +107,8 @@ abstract class BaseEmailDataStorageRemote (
         return messages
     }
 
-    override fun getMailByNumber(account: Account, folderName: String, number: Int): Maybe<Email> {
-        return Maybe.fromCallable {
+    override fun getMailByNumber(account: Account, folderName: String, number: Int): Single<Email> {
+        return Single.fromCallable {
             val store = storeUtils.connectToStore(account, imapSession, SESSION_IMAP)
             val folder = store.getFolder(folderName)
             folder.open(Folder.READ_ONLY)
@@ -142,5 +146,21 @@ abstract class BaseEmailDataStorageRemote (
                 transport.close()
             }
         }.subscribeOn(Schedulers.io())
+    }
+
+    override fun search(account: Account, folder: String, query: String): Single<List<EmailHeader>> {
+        return {
+            val store = storeUtils.connectToStore(account, imapSession, SESSION_IMAP)
+            val fldr = store.getFolder(folder)
+            fldr.open(Folder.READ_ONLY)
+            val searchTerm = OrTerm(SubjectTerm(query), BodyTerm(query))
+            val messages = fldr
+                    .search(searchTerm)
+                    .map { EmailHeader(it) }
+                    .reversed()
+            fldr.close()
+            store.close()
+            messages
+        }.toIoSingle()
     }
 }

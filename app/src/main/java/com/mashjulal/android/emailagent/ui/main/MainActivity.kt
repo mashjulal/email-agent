@@ -9,6 +9,8 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.DividerItemDecoration.VERTICAL
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
+import android.view.Menu
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mashjulal.android.emailagent.R
@@ -20,6 +22,7 @@ import com.mashjulal.android.emailagent.ui.main.menu.AccountListAdapter
 import com.mashjulal.android.emailagent.ui.main.menu.FolderListAdapter
 import com.mashjulal.android.emailagent.ui.messagecontent.MessageContentActivity
 import com.mashjulal.android.emailagent.ui.newemail.NewEmailActivity
+import com.mashjulal.android.emailagent.ui.search.SearchActivity
 import com.mashjulal.android.emailagent.ui.utils.EndlessRecyclerViewScrollListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -65,6 +68,22 @@ class MainActivity : BaseActivity(), MainView {
             val selectedFolder = folderListAdapter.getSelected()
             presenter.requestUpdateMailList(selectedFolder, 0)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        val searchView = menu.findItem(R.id.mi_action_search).actionView as SearchView
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                presenter.onStartSearch(query)
+                searchView.onActionViewCollapsed()
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean = false
+
+        })
+        return true
     }
 
     override fun onBackPressed() {
@@ -129,6 +148,8 @@ class MainActivity : BaseActivity(), MainView {
 
             presenter.requestFolderList(it)
             drawer_layout.closeDrawer(GravityCompat.START)
+
+            setCurrentUser(it, userListAdapter.getSelected())
         }
         rv_accounts.adapter = userListAdapter
     }
@@ -147,6 +168,10 @@ class MainActivity : BaseActivity(), MainView {
 
     override fun newEmail() {
         startActivity(NewEmailActivity.newIntent(this))
+    }
+
+    override fun navToSearchScreen(accountId: Long, folder: String, query: String) {
+        startActivity(SearchActivity.newIntent(this, accountId, folder, query))
     }
 
     companion object {

@@ -5,6 +5,5 @@ import io.reactivex.Completable
 
 interface AuthInteractor {
 
-    fun auth(address: String, password: String): Completable
     fun auth(account: Account): Completable
 }

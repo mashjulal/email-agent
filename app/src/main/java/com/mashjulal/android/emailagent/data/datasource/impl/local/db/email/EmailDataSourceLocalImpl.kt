@@ -11,7 +11,7 @@ import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.email.*
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.Single
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -22,6 +22,9 @@ class EmailDataSourceLocalImpl @Inject constructor(
         private val emailAddressDao: EmailAddressDao,
         private val emailAttachmentDao: EmailAttachmentDao
 ) : EmailDataSource {
+    override fun search(account: Account, folder: String, query: String): Single<List<EmailHeader>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun getMail(account: Account, folderName: String)
             : Flowable<List<Email>> = folderDao.getByAccountIdAndFolderName(account.id, folderName)
@@ -47,9 +50,8 @@ class EmailDataSourceLocalImpl @Inject constructor(
             }
 
     override fun getMailByNumber(account: Account, folderName: String, number: Int)
-            : Maybe<Email> = folderDao.getByAccountIdAndFolderName(account.id, folderName)
-            .flatMapMaybe {
-                emailDao.getByAccountFolderAndMessageNumber(account.id, it.id, number)
+            : Single<Email> = folderDao.getByAccountIdAndFolderName(account.id, folderName)
+            .flatMap { emailDao.getByAccountFolderAndMessageNumber(account.id, it.id, number)
             }
             .map { entityToModel(it) }
 

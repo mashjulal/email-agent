@@ -19,6 +19,7 @@ import com.mashjulal.android.emailagent.data.repository.impl.maildomain.MailDoma
 import com.mashjulal.android.emailagent.utils.EmailUtils
 import dagger.Module
 import dagger.Provides
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -31,8 +32,11 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesMailDomainRepository(mailDomainDataStorage: MailDomainDataStorage): MailDomainRepository
-            = MailDomainRepositoryImpl(mailDomainDataStorage)
+    fun providesMailDomainRepository(
+            dataSourceRemote: MailDomainDataStorage,
+            @Named("local") dataSourceLocal: MailDomainDataStorage
+    ): MailDomainRepository
+            = MailDomainRepositoryImpl(dataSourceRemote, dataSourceLocal)
 
     @Singleton
     @Provides

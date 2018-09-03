@@ -3,19 +3,22 @@ package com.mashjulal.android.emailagent.data.datasource.impl.local.db.account
 import com.mashjulal.android.emailagent.data.datasource.api.AccountDataSource
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.account.entity.AccountEntity
 import com.mashjulal.android.emailagent.domain.model.Account
+import com.mashjulal.android.emailagent.utils.toIoCompletable
 import com.mashjulal.android.emailagent.utils.toIoSingle
-import io.reactivex.Maybe
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
 class AccountDataSourceLocalImpl @Inject constructor(
         private val accountDao: AccountDao
 ) : AccountDataSource {
+    override fun update(account: Account): Completable
+            = { accountDao.insert(modelToEntity(account)) }.toIoCompletable()
 
     override fun insert(account: Account): Single<Long>
             = { accountDao.insert(modelToEntity(account)) }.toIoSingle()
 
-    override fun getById(id: Long): Maybe<Account> =
+    override fun getById(id: Long): Single<Account> =
             accountDao.getById(id).map { entityToModel(it) }
 
     override fun getAll(): Single<List<Account>>

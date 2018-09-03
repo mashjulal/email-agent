@@ -1,6 +1,7 @@
 package com.mashjulal.android.emailagent.domain.model
 
 class MailDomain(
+        val id: Long = 0,
         val name: String,
         val protocol: Protocol,
         val host: String,

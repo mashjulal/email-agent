@@ -8,7 +8,6 @@ import com.mashjulal.android.emailagent.data.repository.impl.folder.FolderReposi
 import com.mashjulal.android.emailagent.domain.interactor.impl.GetFoldersInteractorImpl
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.utils.RxImmediateSchedulerRule
-import io.reactivex.Maybe
 import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
@@ -54,8 +53,8 @@ class GetFoldersInteractorTest {
 
         doReturn(Single.just(accountId)).`when`(preferenceManager).getLastSelectedUserId()
         doReturn(defFolders).`when`(resources).getStringArray(anyInt())
-        doReturn(Maybe.just(account)).`when`(accountRepository).getUserById(anyLong())
-        doReturn(Maybe.just(folderRep)).`when`(folderRepositoryFactory).createFolderRepository(account)
+        doReturn(Single.just(account)).`when`(accountRepository).getUserById(anyLong())
+        doReturn(Single.just(folderRep)).`when`(folderRepositoryFactory).createFolderRepository(account)
         doReturn(Single.just(folders)).`when`(folderRep).getAll(account)
 
         val expected = Triple(folders, folder, folderPos)

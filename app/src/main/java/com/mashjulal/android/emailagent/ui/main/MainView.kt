@@ -14,4 +14,5 @@ interface MainView : BaseView {
     fun setCurrentFolder(folder: String, position: Int)
     fun newEmail()
     fun initMailList()
+    fun navToSearchScreen(accountId: Long, folder: String, query: String)
 }

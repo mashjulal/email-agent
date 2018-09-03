@@ -6,7 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.entity.EmailEntity
 import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.Single
 
 @Dao
 interface EmailDao {
@@ -19,7 +19,7 @@ interface EmailDao {
             AND message_number = :messageNumber
     """)
     fun getByAccountFolderAndMessageNumber(accountId: Long, folderId: Long, messageNumber: Int)
-            : Maybe<EmailEntity>
+            : Single<EmailEntity>
 
     @Query("""
         SELECT *

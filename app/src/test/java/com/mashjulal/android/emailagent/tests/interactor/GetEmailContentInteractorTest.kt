@@ -5,12 +5,13 @@ import com.mashjulal.android.emailagent.data.repository.api.MailRepository
 import com.mashjulal.android.emailagent.data.repository.impl.mail.EmailRepositoryFactory
 import com.mashjulal.android.emailagent.domain.interactor.impl.GetEmailContentInteractorImpl
 import com.mashjulal.android.emailagent.domain.model.Account
+import com.mashjulal.android.emailagent.domain.model.MailDomain
 import com.mashjulal.android.emailagent.domain.model.email.Email
 import com.mashjulal.android.emailagent.domain.model.email.EmailAddress
 import com.mashjulal.android.emailagent.domain.model.email.EmailContent
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import com.mashjulal.android.emailagent.utils.RxImmediateSchedulerRule
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -55,9 +56,9 @@ class GetEmailContentInteractorTest {
                 EmailContent("Plain Content", "<html>Html Content</html>", listOf())
         )
 
-        doReturn(Maybe.just(account)).`when`(accountRepository).getUserById(anyLong())
-        doReturn(Maybe.just(emailRep)).`when`(emailRepositoryFactory).createRepository(account, folder)
-        doReturn(Maybe.just(email)).`when`(emailRep).getMailByNumber(anyInt())
+        doReturn(Single.just(account)).`when`(accountRepository).getUserById(anyLong())
+        doReturn(Single.just(emailRep)).`when`(emailRepositoryFactory).createRepository(account, folder)
+        doReturn(Single.just(email)).`when`(emailRep).getMailByNumber(anyInt())
 
         val testSub = getEmailContentInteractor.getContent(account.id, folder, msgNumber).test()
 
@@ -75,13 +76,14 @@ class GetEmailContentInteractorTest {
     fun test_getContent_NoAccount() {
         val folder = "Inbox"
         val msgNumber = 1
+        val error = Exception()
 
-        doReturn(Maybe.empty<Account>()).`when`(accountRepository).getUserById(anyLong())
+        doReturn(Single.error<Account>(error)).`when`(accountRepository).getUserById(anyLong())
 
         getEmailContentInteractor.getContent(-1L, folder, msgNumber).test()
-                .assertComplete()
-                .assertNoErrors()
-                .assertNoValues()
+                .assertTerminated()
+                .assertError(error)
+                .cancel()
     }
 
     @Test
@@ -90,14 +92,15 @@ class GetEmailContentInteractorTest {
         val folder = "Inbox"
         val emailRep = mock(MailRepository::class.java)
         val msgNumber = 1
+        val error = Exception()
 
-        doReturn(Maybe.just(account)).`when`(accountRepository).getUserById(anyLong())
-        doReturn(Maybe.just(emailRep)).`when`(emailRepositoryFactory).createRepository(account, folder)
-        doReturn(Maybe.empty<Email>()).`when`(emailRep).getMailByNumber(anyInt())
+        doReturn(Single.just(account)).`when`(accountRepository).getUserById(anyLong())
+        doReturn(Single.just(emailRep)).`when`(emailRepositoryFactory).createRepository(account, folder)
+        doReturn(Single.error<MailDomain>(error)).`when`(emailRep).getMailByNumber(anyInt())
 
         getEmailContentInteractor.getContent(account.id, folder, msgNumber).test()
-                .assertComplete()
-                .assertNoErrors()
-                .assertNoValues()
+                .assertTerminated()
+                .assertError(error)
+                .cancel()
     }
 }

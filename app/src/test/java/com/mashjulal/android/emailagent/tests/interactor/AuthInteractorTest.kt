@@ -11,7 +11,6 @@ import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.utils.EmailUtils
 import com.mashjulal.android.emailagent.utils.RxImmediateSchedulerRule
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
@@ -50,10 +49,10 @@ class AuthInteractorTest {
         val password = "123"
         val account = Account(0, "", address, password)
         val protocol = Protocol.IMAP
-        val domain = MailDomain("example", protocol, "localhost", 123)
+        val domain = MailDomain(0, "example", protocol, "localhost", 123)
 
         doReturn(domain.name).`when`(emailUtils).getDomainFromEmail(address)
-        doReturn(Maybe.just(domain)).`when`(mailDomainRepository).getByNameAndProtocol(domain.name, protocol)
+        doReturn(Single.just(domain)).`when`(mailDomainRepository).getByNameAndProtocol(domain.name, protocol)
         doReturn(Completable.complete()).`when`(storeUtils).auth(domain, account)
         doReturn(Single.just(1L)).`when`(accountRepository).addUser(account)
         doReturn(Completable.complete()).`when`(preferenceManager).setLastSelectedUserId(anyLong())

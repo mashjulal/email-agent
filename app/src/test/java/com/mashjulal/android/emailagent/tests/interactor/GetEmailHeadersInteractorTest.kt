@@ -9,7 +9,7 @@ import com.mashjulal.android.emailagent.domain.model.email.EmailAddress
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import com.mashjulal.android.emailagent.utils.RxImmediateSchedulerRule
 import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -50,7 +50,7 @@ class GetEmailHeadersInteractorTest {
                         Date(10), false)
         )
 
-        doReturn(Maybe.just(emailRep)).`when`(emailRepositoryFactory).createRepository(account, folder)
+        doReturn(Single.just(emailRep)).`when`(emailRepositoryFactory).createRepository(account, folder)
         doReturn(Flowable.just(emailHeaders)).`when`(emailRep).getMailHeaders()
 
         val testSub = getEmailHeadersInteractor
@@ -70,17 +70,17 @@ class GetEmailHeadersInteractorTest {
     fun test_getHeaders_NoDomain() {
         val account = Account(1, "", "address", "123")
         val folder = "Inbox"
+        val error = Exception()
 
-        doReturn(Maybe.empty<MailDomain>()).`when`(emailRepositoryFactory).createRepository(account, folder)
+        doReturn(Single.error<MailDomain>(error)).`when`(emailRepositoryFactory).createRepository(account, folder)
 
         val testSub = getEmailHeadersInteractor
                 .getHeaders(account, folder, 0).test()
 
         verify(emailRepositoryFactory, times(1)).createRepository(account, folder)
         testSub
-                .assertComplete()
-                .assertNoErrors()
-                .assertNoValues()
+                .assertTerminated()
+                .assertError(error)
                 .cancel()
     }
 }

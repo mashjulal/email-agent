@@ -21,4 +21,7 @@
     <string name="subscription">Subscription</string>
     <string name="no_more_results_were_found">No more results were found</string>
     <string name="template_datetime">dd.MM.yy hh:mm</string>
+    <string name="search">Search</string>
+    <string name="account_name_in_app">Account name in app</string>
+    <string name="accounts">Accounts</string>
 </resources>

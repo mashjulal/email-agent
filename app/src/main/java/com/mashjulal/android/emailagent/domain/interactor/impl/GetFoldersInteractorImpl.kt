@@ -8,7 +8,7 @@ import com.mashjulal.android.emailagent.data.repository.impl.folder.FolderReposi
 import com.mashjulal.android.emailagent.domain.interactor.GetFoldersInteractor
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.Folder
-import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,10 +21,10 @@ class GetFoldersInteractorImpl @Inject constructor(
         ): GetFoldersInteractor {
 
     override fun getFoldersWithCurrent(folder: String)
-            : Maybe<Triple<List<String>, String, Int>> {
+            : Single<Triple<List<String>, String, Int>> {
         return preferenceManager.getLastSelectedUserId()
-                .flatMapMaybe { accountRepository.getUserById(it) }
-                .flatMap {currentUser -> Maybe.fromCallable {
+                .flatMap { accountRepository.getUserById(it) }
+                .flatMap {currentUser -> Single.fromCallable {
                     val folderRep = folderRepositoryFactory.createFolderRepository(currentUser).blockingGet()
                     val allFolders = folderRep.getAll(currentUser).blockingGet()
                     val defaultFolders = resources.getStringArray(R.array.folders_default)
@@ -32,7 +32,7 @@ class GetFoldersInteractorImpl @Inject constructor(
                     val uniqueFolders = allFolders.filter { it.toLowerCase() !in deff }
                     (defaultFolders + uniqueFolders).toList()
                 } }
-                .flatMap { folders -> Maybe.fromCallable {
+                .flatMap { folders -> Single.fromCallable {
                     Triple(folders, folder, folders.indexOfFirst { it.toUpperCase() == folder })
                 } }
                 .doOnError {
@@ -40,7 +40,7 @@ class GetFoldersInteractorImpl @Inject constructor(
                 }
     }
 
-    override fun getFoldersWithForNewAccount(account: Account): Maybe<Triple<List<String>, String, Int>> {
+    override fun getFoldersWithForNewAccount(account: Account): Single<Triple<List<String>, String, Int>> {
         return preferenceManager.setLastSelectedUserId(account.id)
                 .subscribeOn(Schedulers.io())
                 .andThen(getFoldersWithCurrent(Folder.INBOX.name))

@@ -11,6 +11,7 @@ import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.EmailAttachmentDao
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.EmailDao
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.folder.FolderDao
+import com.mashjulal.android.emailagent.data.datasource.impl.local.db.maildomain.EmailDomainDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -51,6 +52,11 @@ class RoomModule {
     @Provides
     fun providesFolderDao(db: AppDatabase): FolderDao
             = db.getFolderDao()
+
+    @Singleton
+    @Provides
+    fun providesEmailDomainDao(db: AppDatabase): EmailDomainDao
+            = db.getEmailDomainDao()
 
 
 }

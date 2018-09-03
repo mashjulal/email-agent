@@ -39,6 +39,8 @@ class AccountListAdapter(
         notifyItemChanged(selectedPosition)
     }
 
+    fun getSelected() = selectedPosition
+
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         val icon: ImageView = itemView.iv_account

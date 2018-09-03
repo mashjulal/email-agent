@@ -2,6 +2,7 @@ package com.mashjulal.android.emailagent.ui.auth.input
 
 import com.arellomobile.mvp.InjectViewState
 import com.mashjulal.android.emailagent.domain.interactor.AuthInteractor
+import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.ui.base.BasePresenter
 import com.mashjulal.android.emailagent.utils.addToComposite
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,12 +15,12 @@ class AuthFormPresenter @Inject constructor(
         private val authInteractor: AuthInteractor
 ): BasePresenter<AuthFormView>() {
 
-    fun tryToAuth(email: String, pwd: String) {
-        authInteractor.auth(email, pwd)
+    fun tryToAuth(name: String, email: String, pwd: String) {
+        authInteractor.auth(Account(0, name, email, pwd))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { viewState.completeAuthorization() },
-                        { e: Throwable -> viewState.showError(e.message ?: "") }
+                        { e: Throwable -> authFailed(e) }
                 ).addToComposite(compositeDisposable)
     }
 

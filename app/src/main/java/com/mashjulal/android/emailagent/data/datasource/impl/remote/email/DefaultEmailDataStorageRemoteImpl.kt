@@ -6,7 +6,7 @@ import com.mashjulal.android.emailagent.domain.model.MailDomain
 import com.mashjulal.android.emailagent.domain.model.email.Email
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.Single
 
 class DefaultEmailDataStorageRemoteImpl (
         private val folder: String,
@@ -21,6 +21,9 @@ class DefaultEmailDataStorageRemoteImpl (
     fun getMailHeaders(user: Account): Flowable<List<EmailHeader>> =
             super.getMailHeaders(user, folder)
 
-    fun getMailByNumber(user: Account, mailNumber: Int): Maybe<Email> =
+    fun getMailByNumber(user: Account, mailNumber: Int): Single<Email> =
             super.getMailByNumber(user, folder, mailNumber)
+
+    fun search(user: Account, query: String): Single<List<EmailHeader>> =
+            super.search(user, folder, query)
 }

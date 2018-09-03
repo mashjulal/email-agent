@@ -36,21 +36,38 @@ class AuthFormFragment : BaseFragment(), AuthFormView {
     private fun auth() {
         tv_error.text = ""
 
+        val name = et_accountName.text.toString()
         val email = et_email.text.toString()
         val pwd = et_password.text.toString()
-        if (email.isBlank() || pwd.isBlank()) {
-            if (email.isBlank()) {
-                et_email.error = "Empty email"
-            } else {
-                et_password.error = "Empty password"
+
+        val (emailIsValid, msgEmail) = emailValid(email)
+        val (passwordIsValid, msgPassword) = passwordValid(email)
+        if (emailIsValid && passwordIsValid) {
+            presenter.tryToAuth(name, email, pwd)
+        } else {
+            if (msgEmail.isNotBlank()) {
+                et_email.error = msgEmail
             }
-            return
+            if (msgPassword.isNotBlank()) {
+                et_password.error = msgPassword
+            }
         }
-        if (!EmailValidator.getInstance().isValid(email)) {
-            et_email.error = "Invalid email"
-            return
+    }
+
+    private fun emailValid(email: String): Pair<Boolean, String> {
+        if (email.isBlank()) {
+            return false to "Empty email"
+        } else if (!EmailValidator.getInstance().isValid(email)) {
+            return false to "Invalid email"
         }
-        presenter.tryToAuth(email, pwd)
+        return true to ""
+    }
+
+    private fun passwordValid(pwd: String): Pair<Boolean, String> {
+        if (pwd.isBlank()) {
+            return false to "Empty password"
+        }
+        return true to ""
     }
 
     override fun completeAuthorization() {

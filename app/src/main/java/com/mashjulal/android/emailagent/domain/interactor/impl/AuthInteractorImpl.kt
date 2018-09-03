@@ -30,8 +30,4 @@ class AuthInteractorImpl @Inject constructor(
                     preferenceManager.setLastSelectedUserId(userId) }
                 .doOnError { Timber.e(it) }
     }
-
-    override fun auth(address: String, password: String): Completable {
-        return auth(Account(0, "", address, password))
-    }
 }

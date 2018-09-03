@@ -91,4 +91,8 @@ class MainPresenter @Inject constructor(
         compositeDisposable.dispose()
     }
 
+    fun onStartSearch(query: String) {
+        viewState.navToSearchScreen(currentUser.id, currentFolder, query)
+    }
+
 }

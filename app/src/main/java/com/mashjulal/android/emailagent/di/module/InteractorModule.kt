@@ -58,4 +58,10 @@ class InteractorModule {
                                           emailRepositoryFactory: EmailRepositoryFactory)
             : GetEmailContentInteractor
             = GetEmailContentInteractorImpl(accountRepository, emailRepositoryFactory)
+
+    @Provides
+    fun providesSearchEmailInteractor(accountRepository: AccountRepository,
+                                      emailRepositoryFactory: EmailRepositoryFactory
+    ): SearchEmailInteractor
+            = SearchEmailInteractorImpl(accountRepository, emailRepositoryFactory)
 }

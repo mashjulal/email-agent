@@ -7,8 +7,8 @@ import com.mashjulal.android.emailagent.data.repository.api.MailRepository
 import com.mashjulal.android.emailagent.domain.model.Account
 import com.mashjulal.android.emailagent.domain.model.Protocol
 import com.mashjulal.android.emailagent.utils.EmailUtils
-import com.mashjulal.android.emailagent.utils.toIoMaybe
-import io.reactivex.Maybe
+import com.mashjulal.android.emailagent.utils.toIoSingle
+import io.reactivex.Single
 import javax.inject.Inject
 
 class EmailRepositoryFactoryImpl @Inject constructor(
@@ -16,7 +16,7 @@ class EmailRepositoryFactoryImpl @Inject constructor(
         private val emailUtils: EmailUtils,
         private val storeUtils: StoreUtils
 ): EmailRepositoryFactory {
-    override fun createRepository(account: Account, folder: String): Maybe<MailRepository> {
+    override fun createRepository(account: Account, folder: String): Single<MailRepository> {
         return {
             val domain = emailUtils.getDomainFromEmail(account.address)
 
@@ -27,6 +27,6 @@ class EmailRepositoryFactoryImpl @Inject constructor(
                     storeUtils
             )
             MailRepositoryImpl(account, folder, mailRep)
-        }.toIoMaybe()
+        }.toIoSingle()
     }
 }

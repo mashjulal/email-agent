@@ -5,4 +5,5 @@ import io.reactivex.Single
 
 interface GetAccountsWithCurrentInteractor {
     fun get(): Single<Triple<List<Account>, Account, Int>>
+    fun get(accountId: Long): Single<Triple<List<Account>, Account, Int>>
 }

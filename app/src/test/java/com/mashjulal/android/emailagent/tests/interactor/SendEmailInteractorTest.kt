@@ -12,7 +12,7 @@ import com.mashjulal.android.emailagent.domain.model.email.EmailContent
 import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import com.mashjulal.android.emailagent.utils.RxImmediateSchedulerRule
 import io.reactivex.Completable
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
@@ -59,7 +59,7 @@ class SendEmailInteractorTest {
                 EmailContent("$text\n$subscription", "", listOf())
         )
 
-        doReturn(Maybe.just(emailRep)).`when`(emailRepositoryFactory).createRepository(account, folder)
+        doReturn(Single.just(emailRep)).`when`(emailRepositoryFactory).createRepository(account, folder)
         doReturn(Completable.complete()).`when`(emailRep).sendMail(email)
 
         val testSub = sendEmailInteractor
