@@ -125,6 +125,8 @@ abstract class BaseEmailDataStorageRemote (
 
     override fun sendMail(account: Account, folderName: String, email: Email): Completable {
         return Completable.fromCallable {
+            if (email.emailHeader.to == null) throw Exception("Null recipient address")
+
             val session = Session.getInstance(smtpSession.properties, object: Authenticator() {
                 override fun getPasswordAuthentication(): PasswordAuthentication {
                     return PasswordAuthentication(account.address, account.password)
