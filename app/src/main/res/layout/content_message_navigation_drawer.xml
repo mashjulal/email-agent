@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_accounts"
+        android:id="@+id/rvAccounts"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -30,7 +30,7 @@
         tools:listitem="@layout/item_account" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_folders"
+        android:id="@+id/rvFolders"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -50,27 +50,27 @@
         app:layout_constraintGuide_percent="0.3" />
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/tvName"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="bottom|center_horizontal"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_email"
+        app:layout_constraintBottom_toTopOf="@+id/tvEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_email"
+        android:id="@+id/tvEmail"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="top|center_horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/rv_folders"
+        app:layout_constraintBottom_toTopOf="@+id/rvFolders"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+        app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
@@ -81,7 +81,7 @@
         app:layout_constraintGuide_percent="0.15" />
 
     <Button
-        android:id="@+id/btn_newUser"
+        android:id="@+id/btnNewUser"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -105,7 +105,7 @@
         android:background="@color/colorSelected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toEndOf="@+id/rv_accounts"
+        app:layout_constraintStart_toEndOf="@+id/rvAccounts"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View

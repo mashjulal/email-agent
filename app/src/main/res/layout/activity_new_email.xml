@@ -14,7 +14,7 @@
         app:layout_constraintGuide_end="16dp" />
 
     <EditText
-        android:id="@+id/et_to"
+        android:id="@+id/etTo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -23,10 +23,10 @@
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/spnr_accounts" />
+        app:layout_constraintTop_toBottomOf="@+id/spnrAccounts" />
 
     <EditText
-        android:id="@+id/et_subject"
+        android:id="@+id/etSubject"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -35,10 +35,10 @@
         android:inputType="textEmailSubject"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/et_to" />
+        app:layout_constraintTop_toBottomOf="@+id/etTo" />
 
     <EditText
-        android:id="@+id/et_text"
+        android:id="@+id/etText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -47,10 +47,10 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/et_subject" />
+        app:layout_constraintTop_toBottomOf="@+id/etSubject" />
 
     <EditText
-        android:id="@+id/et_subscription"
+        android:id="@+id/etSubscription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -59,10 +59,10 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/et_text" />
+        app:layout_constraintTop_toBottomOf="@+id/etText" />
 
     <Spinner
-        android:id="@+id/spnr_accounts"
+        android:id="@+id/spnrAccounts"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

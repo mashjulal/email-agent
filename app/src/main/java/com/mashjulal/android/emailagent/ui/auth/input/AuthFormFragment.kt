@@ -34,11 +34,11 @@ class AuthFormFragment : BaseFragment(), AuthFormView {
     }
 
     private fun auth() {
-        tv_error.text = ""
+        tvError.text = ""
 
-        val name = et_accountName.text.toString()
-        val email = et_email.text.toString()
-        val pwd = et_password.text.toString()
+        val name = etAccountName.text.toString()
+        val email = etEmail.text.toString()
+        val pwd = etPassword.text.toString()
 
         val (emailIsValid, msgEmail) = emailValid(email)
         val (passwordIsValid, msgPassword) = passwordValid(email)
@@ -46,10 +46,10 @@ class AuthFormFragment : BaseFragment(), AuthFormView {
             presenter.tryToAuth(name, email, pwd)
         } else {
             if (msgEmail.isNotBlank()) {
-                et_email.error = msgEmail
+                etEmail.error = msgEmail
             }
             if (msgPassword.isNotBlank()) {
-                et_password.error = msgPassword
+                etPassword.error = msgPassword
             }
         }
     }
@@ -75,7 +75,7 @@ class AuthFormFragment : BaseFragment(), AuthFormView {
     }
 
     override fun showError(error: String) {
-        tv_error.text = error
+        tvError.text = error
     }
 
     companion object {

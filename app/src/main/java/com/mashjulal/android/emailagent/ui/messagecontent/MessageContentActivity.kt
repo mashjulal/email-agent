@@ -70,7 +70,7 @@ class MessageContentActivity : BaseActivity(), MessageContentView {
                     attachment.inputStream)
             showFile(this, attachmentFile, attachment.contentType)
         }
-        rv_attachments.adapter = attachmentAdapter
+        rvAttachments.adapter = attachmentAdapter
     }
 
     override fun showMessageTitle(subject: String) {
@@ -85,7 +85,7 @@ class MessageContentActivity : BaseActivity(), MessageContentView {
         }.subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { html ->
-                    tv_htmlContent.text = html
+                    tvHtmlContent.text = html
                 }
         attachments = content.attachments
         attachmentAdapter.onNewData(attachments)

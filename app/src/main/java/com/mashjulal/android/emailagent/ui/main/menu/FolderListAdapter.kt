@@ -40,7 +40,7 @@ class FolderListAdapter(
     }
 
     inner class FolderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val title: TextView = itemView.tv_title
+        val title: TextView = itemView.tvTitle
 
         init {
             itemView.setOnClickListener(this)

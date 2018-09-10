@@ -10,6 +10,6 @@ data class Email(
     constructor(msg: Message, msgParsed: MimeMessageParser):
             this(EmailHeader(msg), EmailContent(
                     msgParsed.plainContent ?: "",
-                    msgParsed.htmlContent,
+                    msgParsed.htmlContent ?: "",
                     msgParsed.attachmentList.map { EmailAttachment(it.name, it.contentType, it.inputStream) }))
 }

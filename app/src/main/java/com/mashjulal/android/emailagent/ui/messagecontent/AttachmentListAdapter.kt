@@ -37,6 +37,6 @@ class AttachmentListAdapter(
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val fileName: TextView = itemView.tv_name
+        val fileName: TextView = itemView.tvName
     }
 }

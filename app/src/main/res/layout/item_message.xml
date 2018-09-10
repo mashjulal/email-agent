@@ -6,7 +6,7 @@
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/iv_account"
+        android:id="@+id/ivAccount"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:contentDescription="@string/message_sender_icon"
@@ -15,20 +15,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_sender"
+        android:id="@+id/tvSender"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintBottom_toTopOf="@+id/tv_subject"
-        app:layout_constraintEnd_toStartOf="@+id/tv_receivedAt"
-        app:layout_constraintStart_toEndOf="@+id/iv_account"
+        app:layout_constraintBottom_toTopOf="@+id/tvSubject"
+        app:layout_constraintEnd_toStartOf="@+id/tvReceived"
+        app:layout_constraintStart_toEndOf="@+id/ivAccount"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_subject"
+        android:id="@+id/tvSubject"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -37,26 +37,26 @@
         android:ellipsize="end"
         android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_isSeen"
-        app:layout_constraintStart_toEndOf="@+id/iv_account"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sender" />
+        app:layout_constraintEnd_toStartOf="@+id/ivIsSeen"
+        app:layout_constraintStart_toEndOf="@+id/ivAccount"
+        app:layout_constraintTop_toBottomOf="@+id/tvSender" />
 
     <ImageView
-        android:id="@+id/iv_isSeen"
+        android:id="@+id/ivIsSeen"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_subject"
+        app:layout_constraintBottom_toBottomOf="@+id/tvSubject"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_subject"
+        app:layout_constraintTop_toTopOf="@+id/tvSubject"
         app:srcCompat="@drawable/selector_unread" />
 
     <TextView
-        android:id="@+id/tv_receivedAt"
+        android:id="@+id/tvReceived"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_sender"
+        app:layout_constraintBottom_toBottomOf="@+id/tvSender"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_sender" />
+        app:layout_constraintTop_toTopOf="@+id/tvSender" />
 
 </android.support.constraint.ConstraintLayout>

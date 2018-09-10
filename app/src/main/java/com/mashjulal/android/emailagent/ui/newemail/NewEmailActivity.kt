@@ -47,18 +47,18 @@ class NewEmailActivity : BaseActivity(), NewEmailView {
     }
 
     private fun collectEmail() {
-        val account = spnr_accounts.selectedItem as Account
-        val to = et_to.text.toString()
-        val subject = et_subject.text.toString()
-        val content = et_text.text.toString()
-        val subscription = et_subscription.text.toString()
+        val account = spnrAccounts.selectedItem as Account
+        val to = etTo.text.toString()
+        val subject = etSubject.text.toString()
+        val content = etText.text.toString()
+        val subscription = etSubscription.text.toString()
         presenter.sendEmail(account, to, subject, content, subscription)
     }
 
     override fun setAccounts(accounts: List<Account>, selectedPosition: Int) {
         accountListAdapter = AccountListAdapter(this, accounts)
-        spnr_accounts.adapter = accountListAdapter
-        spnr_accounts.setSelection(selectedPosition)
+        spnrAccounts.adapter = accountListAdapter
+        spnrAccounts.setSelection(selectedPosition)
     }
 
     override fun close() {

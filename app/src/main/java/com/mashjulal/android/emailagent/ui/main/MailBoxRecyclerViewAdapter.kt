@@ -99,10 +99,10 @@ class MailBoxRecyclerViewAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val senderIcon: ImageView = itemView.iv_account
-        var tvSender: TextView = itemView.tv_sender
-        var tvSubject: TextView = itemView.tv_subject
-        var isSeen: ImageView = itemView.iv_isSeen
-        var tvReceivedAt: TextView = itemView.tv_receivedAt
+        val senderIcon: ImageView = itemView.ivAccount
+        var tvSender: TextView = itemView.tvSender
+        var tvSubject: TextView = itemView.tvSubject
+        var isSeen: ImageView = itemView.ivIsSeen
+        var tvReceivedAt: TextView = itemView.tvReceived
     }
 }

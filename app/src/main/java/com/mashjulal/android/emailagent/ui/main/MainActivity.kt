@@ -53,10 +53,10 @@ class MainActivity : BaseActivity(), MainView {
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-        btn_newUser.setOnClickListener {
+        btnNewUser.setOnClickListener {
             startActivityForResult(AuthActivity.newIntent(this), 0)
         }
-        fab_newEmail.setOnClickListener {
+        fabNewEmail.setOnClickListener {
             presenter.requestNewEmail()
         }
         swipeRefresh.setOnRefreshListener {
@@ -135,8 +135,8 @@ class MainActivity : BaseActivity(), MainView {
             presenter.requestUpdateMailList(selectedFolder, 0)
             drawer_layout.closeDrawer(GravityCompat.START)
         }
-        rv_folders.adapter = folderListAdapter
-        rv_folders.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        rvFolders.adapter = folderListAdapter
+        rvFolders.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
     override fun updateUserList(users: List<Account>) {
@@ -151,12 +151,12 @@ class MainActivity : BaseActivity(), MainView {
 
             setCurrentUser(it, userListAdapter.getSelected())
         }
-        rv_accounts.adapter = userListAdapter
+        rvAccounts.adapter = userListAdapter
     }
 
     override fun setCurrentUser(user: Account, position: Int) {
-        tv_name.text = user.name
-        tv_email.text = user.address
+        tvName.text = user.name
+        tvEmail.text = user.address
 
         userListAdapter.setSelected(position)
     }

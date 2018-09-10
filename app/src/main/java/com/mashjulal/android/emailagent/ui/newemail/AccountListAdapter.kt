@@ -21,9 +21,9 @@ class AccountListAdapter(
         val account = accounts[position]
         val v = convertView ?: inflater.inflate(R.layout.item_spinner_account, parent, false)
 
-        v.iv_account.setImageDrawable(
+        v.ivAccount.setImageDrawable(
                     createTextIcon(account.address[0].toString(), account.address))
-        v.tv_address.text = account.address
+        v.tvAddress.text = account.address
         return v
     }
 
