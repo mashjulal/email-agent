@@ -10,4 +10,5 @@ class EntityTypeConverters {
 
     @TypeConverter
     fun fromProtocol(protocol: Protocol) = protocol.ordinal
+
 }

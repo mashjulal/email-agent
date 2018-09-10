@@ -73,38 +73,35 @@ abstract class BaseEmailDataStorageRemote (
     }
 
     private fun requestMailHeaders(account: Account, folderName: String, offset: Int): List<EmailHeader> {
-        val store = storeUtils.connectToStore(account, imapSession, SESSION_IMAP)
-        val folder = store.getFolder(folderName)
-        folder.open(Folder.READ_ONLY)
-        val msgCnt = folder.messageCount
-        val start = max(1, msgCnt-PAGE_SIZE*offset-PAGE_SIZE+1)
-        val end = msgCnt-PAGE_SIZE*offset
-        val messages = folder
-                .getMessages(start, end)
-                .map { EmailHeader(it) }
-                .reversed()
-        folder.close()
-        store.close()
-        return messages
+        return requestMail(account, folderName, offset) { EmailHeader(it) }
     }
 
     private fun requestMail(account: Account, folderName: String, offset: Int): List<Email> {
-        val store = storeUtils.connectToStore(account, imapSession, SESSION_IMAP)
-        val folder = store.getFolder(folderName)
-        folder.open(Folder.READ_ONLY)
-        val msgCnt = folder.messageCount
-        val start = max(1, msgCnt-PAGE_SIZE*offset-PAGE_SIZE+1)
-        val end = msgCnt-PAGE_SIZE*offset
-        val messages = folder
-                .getMessages(start, end)
-                .map { msg: Message ->
-                    val msgParsed = MimeMessageParser(msg as MimeMessage).parse()
-                    Email(msg, msgParsed)
-                }
-                .reversed()
-        folder.close()
-        store.close()
-        return messages
+        return requestMail(account, folderName, offset) {
+            val msgParsed = MimeMessageParser(it as MimeMessage).parse()
+            Email(it, msgParsed)
+        }
+    }
+
+    private fun <T> requestMail(account: Account, folderName: String, offset: Int,
+                                mapper: (Message) -> T): List<T> {
+        var store: Store? = null
+        var folder: Folder? = null
+        try {
+            store = storeUtils.connectToStore(account, imapSession, SESSION_IMAP)
+            folder = store.getFolder(folderName)
+            folder.open(Folder.READ_ONLY)
+            val msgCnt = folder.messageCount
+            val start = max(1, msgCnt-PAGE_SIZE*offset-PAGE_SIZE+1)
+            val end = msgCnt-PAGE_SIZE*offset
+            return folder
+                    .getMessages(start, end)
+                    .map { mapper.invoke(it) }
+                    .reversed()
+        } finally {
+            folder?.close()
+            store?.close()
+        }
     }
 
     override fun getMailByNumber(account: Account, folderName: String, number: Int): Single<Email> {
@@ -135,15 +132,13 @@ abstract class BaseEmailDataStorageRemote (
             })
             val transport = session.getTransport(Protocol.SMTP.name.toLowerCase())
             transport.connect()
-            try {
+            transport.use {
                 val msg = MimeMessage(session)
                 msg.setFrom(InternetAddress(account.address))
                 msg.addRecipient(Message.RecipientType.TO, InternetAddress(email.emailHeader.to.email))
                 msg.subject = email.emailHeader.subject
                 msg.setText(email.content.textContent)
-                transport.sendMessage(msg, msg.allRecipients)
-            } finally {
-                transport.close()
+                it.sendMessage(msg, msg.allRecipients)
             }
         }.subscribeOn(Schedulers.io())
     }

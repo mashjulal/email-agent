@@ -1,18 +1,18 @@
 package com.mashjulal.android.emailagent.data.datasource.impl.local.db.email
 
-import android.webkit.MimeTypeMap
 import com.mashjulal.android.emailagent.data.datasource.api.EmailDataSource
+import com.mashjulal.android.emailagent.data.datasource.impl.local.db.EmailMappers
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.EmailAddressDao
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.EmailAttachmentDao
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.dao.EmailDao
-import com.mashjulal.android.emailagent.data.datasource.impl.local.db.email.entity.EmailEntity
 import com.mashjulal.android.emailagent.data.datasource.impl.local.db.folder.FolderDao
 import com.mashjulal.android.emailagent.domain.model.Account
-import com.mashjulal.android.emailagent.domain.model.email.*
+import com.mashjulal.android.emailagent.domain.model.email.Email
+import com.mashjulal.android.emailagent.domain.model.email.EmailAddress
+import com.mashjulal.android.emailagent.domain.model.email.EmailHeader
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import java.io.File
 import java.util.*
 import javax.inject.Inject
 
@@ -31,7 +31,15 @@ class EmailDataSourceLocalImpl @Inject constructor(
                 .flatMapPublisher{
                     emailDao.getAllByAccountAndFolderOrderByReceiveDateDesc(account.id, it.id)
                 }
-                .map { it.map { e -> entityToModel(e)} }
+                .map { it.map { e ->
+                    val from = emailAddressDao.getById(e.fromAddressId)
+                            .blockingGet()
+                    val to = emailAddressDao.getById(e.toAddressId)
+                            .blockingGet()
+                    val attachments = emailAttachmentDao.getAllByEmailId(e.id)
+                            .blockingGet()
+                    EmailMappers.toEmailModel(e, from, to, attachments) }
+                }
 
     override fun getMailHeaders(account: Account, folderName: String)
             : Flowable<List<EmailHeader>> = folderDao.getByAccountIdAndFolderName(account.id, folderName)
@@ -53,26 +61,16 @@ class EmailDataSourceLocalImpl @Inject constructor(
             : Single<Email> = folderDao.getByAccountIdAndFolderName(account.id, folderName)
             .flatMap { emailDao.getByAccountFolderAndMessageNumber(account.id, it.id, number)
             }
-            .map { entityToModel(it) }
+            .map {
+                val from = emailAddressDao.getById(it.fromAddressId)
+                        .blockingGet()
+                val to = emailAddressDao.getById(it.toAddressId)
+                        .blockingGet()
+                val attachments = emailAttachmentDao.getAllByEmailId(it.id)
+                        .blockingGet()
+                EmailMappers.toEmailModel(it, from, to, attachments) }
 
     override fun sendMail(account: Account, folderName: String, email: Email): Completable {
         throw UnsupportedOperationException()
-    }
-
-    private fun entityToModel(emailEntity: EmailEntity): Email {
-        val from = emailAddressDao.getById(emailEntity.fromAddressId).blockingGet()
-        val to = emailAddressDao.getById(emailEntity.toAddressId).blockingGet()
-        val attachments = emailAttachmentDao.getAllByEmailId(emailEntity.id).blockingGet()
-        val header = EmailHeader(emailEntity.messageNumber, emailEntity.subject,
-                EmailAddress(from.email, from.name),
-                EmailAddress(to.email, to.name),
-                Date(emailEntity.receivedDate), emailEntity.isRead)
-        val attch = attachments.map { att ->
-            val ext = MimeTypeMap.getFileExtensionFromUrl(att.path)
-            val contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
-            EmailAttachment(att.path, contentType, File(att.path).inputStream())
-        }
-        val content = EmailContent(emailEntity.textContent, emailEntity.htmlContent, attch)
-        return Email(header, content)
     }
 }
